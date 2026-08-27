@@ -1,0 +1,6 @@
+LocalDB Schema Version=1.0
+"uid","uname","instance","password","user_groups","login_failures","passwd_expire","lockout_start","ttl","dynamic_user","deleted","suspended","locked_out","change_passwd","last_modified","first_name","last_name","email"
+"6953","Olivia","/Common/local_db","pwOlivia","","0","","0","","0","0","0","0","0","","Olivia","HR","olivia@f5trn.com"
+"6954","Mark","/Common/local_db","pwMark","","0","","0","","0","0","0","0","0","","Mark","FIN","mark@f5trn.com"
+"6955","Kevin","/Common/local_db","pwKevin","","0","","0","","0","0","0","0","0","","Kevin","ENG","kevin@f5trn.com"
+FOUND_ROWS()="3"

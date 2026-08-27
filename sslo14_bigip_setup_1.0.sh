@@ -77,7 +77,7 @@ tmsh modify sys global-settings mgmt-dhcp disabled
 tmsh modify sys global-settings hostname "sslo${n}.f5trn.com"
 tmsh modify sys ntp servers replace-all-with { pool.ntp.org }
 tmsh modify sys dns name-servers replace-all-with { 8.8.8.8 }
-tmsh mv cm device "sslo${n}" "sslo${n}.f5trn.com"
+tmsh mv cm device "bigip1" "sslo${n}"
 station=${n}
 if [ $n -lt 10 ]; then
   station=0${n}
@@ -95,7 +95,6 @@ f5trn0${station}
 EOD
 #option to create instructor admin role
 #tmsh create auth user Instructor password f5trnins partition-access add {all-partitions { role admin } } shell bash
-tmsh create net route external_default_gateway gw 10.10.0.254 network default
 tmsh create net vlan internal interfaces add { 1.2 { untagged } }
 tmsh create net vlan external interfaces add { 1.1 { untagged } }
 tmsh create net vlan icap_VLAN interfaces add { 1.3 { tagged } } tag 50
@@ -108,22 +107,23 @@ tmsh create net self "172.17.${n}.31" address "172.17.${n}.31/16" traffic-group 
 tmsh create net self "172.17.${n}.33" address "172.17.${n}.33/16" traffic-group traffic-group-1 vlan HA
 tmsh create net self "198.19.97.${o}" address "198.19.97.${o}/25" traffic-group traffic-group-local-only vlan icap_VLAN
 tmsh create net self "198.19.97.33" address "198.19.97.33/25" traffic-group traffic-group-1 vlan icap_VLAN
-tmsh modify cm device "sslo${n}.f5trn.com" configsync-ip "172.17.${n}.31" unicast-address {{ effective-ip "192.168.${n}.31" ip "192.168.${n}.31" } { effective-ip "172.16.${n}.31" ip "172.16.${n}.31" }} mirror-ip "172.17.${n}.31"
+tmsh create net route external_default_gateway gw 10.10.0.254 network default
+tmsh modify cm device "sslo${n}" configsync-ip "172.17.${n}.31" unicast-address {{ effective-ip "192.168.${n}.31" ip "192.168.${n}.31" } { effective-ip "172.16.${n}.31" ip "172.16.${n}.31" }} mirror-ip "172.17.${n}.31"
 # tmsh create /ltm pool existing_app_pool load-balancing-mode round-robin members add { 172.16.20.1:443 172.16.20.2:443 172.16.20.3:443 } monitor gateway_icmp
 tmsh create /ltm pool juice_pool load-balancing-mode round-robin members add { 172.16.100.20:3000 } monitor gateway_icmp
 tmsh create /ltm pool webserver_pool load-balancing-mode round-robin members add { 172.16.100.10:80 } monitor gateway_icmp
 tmsh create /ltm virtual juice_vs destination 10.10.100.20:80 pool juice_pool profiles add { tcp } source-address-translation { type automap } translate-address enabled translate-port enabled
 tmsh create /ltm virtual webserver_vs destination 10.10.100.10:80 pool webserver_pool profiles add { tcp } source-address-translation { type automap } translate-address enabled translate-port enabled
 tmsh modify /sys db provision.extramb value 500
-sleep 20
+sleep 60
 for i in {1..30}; do [ "$(cat /var/prompt/ps1)" = "Active" ] && break; sleep 5; done
-tmsh modify /sys provision sslo level nominal
-sleep 20
+tmsh modify /sys provision sslo urldb level nominal
+sleep 60
 for i in {1..30}; do [ "$(cat /var/prompt/ps1)" = "Active" ] && break; sleep 5; done
-tmsh modify /sys provision ltm urldb level minimum
-sleep 20
-for i in {1..30}; do [ "$(cat /var/prompt/ps1)" = "Active" ] && break; sleep 5; done
-# tmsh modify /sys provision ltm level none
+#tmsh modify /sys provision ltm urldb level minimum
+#sleep 60
+#for i in {1..30}; do [ "$(cat /var/prompt/ps1)" = "Active" ] && break; sleep 5; done
+#tmsh modify /sys provision ltm level none
 #sleep 20
 #for i in {1..30}; do [ "$(cat /var/prompt/ps1)" = "Active" ] && break; sleep 5; done
 tmsh save sys config

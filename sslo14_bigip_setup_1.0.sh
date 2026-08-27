@@ -108,7 +108,7 @@ tmsh create net self "172.17.${n}.31" address "172.17.${n}.31/16" traffic-group 
 tmsh create net self "172.17.${n}.33" address "172.17.${n}.33/16" traffic-group traffic-group-1 vlan HA
 tmsh create net self "198.19.97.${o}" address "198.19.97.${o}/25" traffic-group traffic-group-local-only vlan icap_VLAN
 tmsh create net self "198.19.97.33" address "198.19.97.33/25" traffic-group traffic-group-1 vlan icap_VLAN
-tmsh modify cm device "bigip${n}.f5trn.com" configsync-ip "172.17.${n}.31" unicast-address {{ effective-ip "192.168.${n}.31" ip "192.168.${n}.31" } { effective-ip "172.16.${n}.31" ip "172.16.${n}.31" }} mirror-ip "172.17.${n}.31"
+tmsh modify cm device "sslo${n}.f5trn.com" configsync-ip "172.17.${n}.31" unicast-address {{ effective-ip "192.168.${n}.31" ip "192.168.${n}.31" } { effective-ip "172.16.${n}.31" ip "172.16.${n}.31" }} mirror-ip "172.17.${n}.31"
 # tmsh create /ltm pool existing_app_pool load-balancing-mode round-robin members add { 172.16.20.1:443 172.16.20.2:443 172.16.20.3:443 } monitor gateway_icmp
 tmsh create /ltm pool juice_pool load-balancing-mode round-robin members add { 172.16.100.20:3000 } monitor gateway_icmp
 tmsh create /ltm pool webserver_pool load-balancing-mode round-robin members add { 172.16.100.10:80 } monitor gateway_icmp

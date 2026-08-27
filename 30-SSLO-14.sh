@@ -1,0 +1,83 @@
+# copy ca-cert files to internal client
+mkdir /home/student/Downloads/certs
+curl --silent https://raw.githubusercontent.com/f5education/$COURSE_ID/main/certs/ca-f5trn-com.pfx --output Downloads/certs/ca-f5trn-com.pfx
+curl --silent https://raw.githubusercontent.com/f5education/$COURSE_ID/main/certs/ca-f5trn-com.crt --output Downloads/certs/ca-f5trn-com.crt
+curl --silent https://raw.githubusercontent.com/f5education/$COURSE_ID/main/certs/ca-f5trn-com.key --output Downloads/certs/ca-f5trn-com.key
+
+#install ca-cert on Internal Client
+sudo cp Downloads/certs/ca-f5trn-com.crt /usr/local/share/ca-certificates
+sudo update-ca-certificates
+
+#install certutil libnss3-tools
+sudo apt update && sudo apt install libnss3-tools -y
+
+#install ca-cert into Chrome and Edge browsers
+certutil -d sql:$HOME/.pki/nssdb -A -t "C,," -n "ca-f5trn-com" -i Downloads/certs/ca-f5trn-com.crt
+
+#T his instructs Firefox to trust certificates located in the Ubuntu System Trust Store
+#Option #1 for Firefox
+#sudo mkdir -p /etc/firefox/policies
+#echo '{"policies": {"ImportEnterpriseRoots": true}}' | sudo tee /etc/firefox/policies/policies.json
+
+# Optoion #2 for Firefox
+#export FF_PROFILE=$(ls -d ~/snap/firefox/common/.mozilla/firefox/*.default)
+#certutil -A -n "ca-f5trn-com" -t "TC,," -i Downloads/certs/ca-f5trn-com.crt -d sql:$FF_PROFILE
+
+# Option #3 for Firefox
+sudo mkdir -p /etc/firefox/policies/certificates
+sudo cp /home/student/Downloads/certs/ca-f5trn-com.crt /etc/firefox/policies/certificates/
+sudo bash -c 'cat <<EOF > /etc/firefox/policies/policies.json
+{
+  "policies": {
+    "Certificates": {
+      "Install": [
+        "/etc/firefox/policies/certificates/ca-f5trn-com.crt"
+      ]
+    }
+  }
+}
+EOF'
+
+# Backup the existing netplan configuration
+sudo cp /etc/netplan/01-config.yaml /etc/netplan/01-config.yaml.bak
+
+# Replace the netplan contents with new configuration
+cat <<EOF | sudo tee /etc/netplan/01-config.yaml
+network:
+  version: 2
+  renderer: NetworkManager
+  ethernets:
+    ens160:
+      dhcp4: false
+      addresses:
+      - 172.16.1.30/16
+      routes:
+      - to: default
+        via: 172.16.1.33/16
+      nameservers:
+        addresses:
+        - 8.8.8.8
+        - 8.8.4.4
+        search:
+        - f5trn.com
+    ens192:
+      dhcp4: false
+      addresses:
+      - 192.168.1.30/16
+    ens32:
+      dhcp4: true
+      nameservers:
+        addresses:
+        - 192.168.1.1
+        search:
+        - shellnet.lods
+EOF
+
+# Test and apply the configuration
+#sudo netplan try
+sudo netplan apply
+
+sleep 2
+
+# confirm networking is up
+until ping -c 1 172.16.1.33; do sleep 1; done

@@ -9,7 +9,7 @@ sudo cp Downloads/certs/ca-f5trn-com.crt /usr/local/share/ca-certificates
 sudo update-ca-certificates
 
 #install certutil libnss3-tools
-sudo apt update && sudo apt install libnss3-tools -y
+#sudo apt update && sudo apt install libnss3-tools -y
 
 #install ca-cert into Chrome and Edge browsers
 certutil -d sql:$HOME/.pki/nssdb -A -t "C,," -n "ca-f5trn-com" -i Downloads/certs/ca-f5trn-com.crt

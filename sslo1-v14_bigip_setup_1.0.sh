@@ -117,7 +117,7 @@ tmsh create /ltm virtual webserver_vs destination 10.10.100.10:80 pool webserver
 tmsh modify /sys db provision.extramb value 500
 sleep 60
 for i in {1..30}; do [ "$(cat /var/prompt/ps1)" = "Active" ] && break; sleep 5; done
-tmsh modify /sys provision sslo urldb level nominal
+tmsh modify /sys provision sslo level nominal
 sleep 60
 for i in {1..30}; do [ "$(cat /var/prompt/ps1)" = "Active" ] && break; sleep 5; done
 #tmsh modify /sys provision ltm urldb level minimum

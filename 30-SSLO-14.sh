@@ -1,8 +1,8 @@
-# copy ca-cert files to internal client
+# copy ca-cert files to internal client  $COURSE_ID
 mkdir /home/student/Downloads/certs
-curl --silent https://raw.githubusercontent.com/f5education/$COURSE_ID/main/certs/ca-f5trn-com.pfx --output Downloads/certs/ca-f5trn-com.pfx
-curl --silent https://raw.githubusercontent.com/f5education/$COURSE_ID/main/certs/ca-f5trn-com.crt --output Downloads/certs/ca-f5trn-com.crt
-curl --silent https://raw.githubusercontent.com/f5education/$COURSE_ID/main/certs/ca-f5trn-com.key --output Downloads/certs/ca-f5trn-com.key
+curl --silent https://raw.githubusercontent.com/f5education/SSLO-12/main/certs/ca-f5trn-com.pfx --output Downloads/certs/ca-f5trn-com.pfx
+curl --silent https://raw.githubusercontent.com/f5education/SSLO-12/main/certs/ca-f5trn-com.crt --output Downloads/certs/ca-f5trn-com.crt
+curl --silent https://raw.githubusercontent.com/f5education/SSLO-12/main/certs/ca-f5trn-com.key --output Downloads/certs/ca-f5trn-com.key
 
 #install ca-cert on Internal Client
 sudo cp Downloads/certs/ca-f5trn-com.crt /usr/local/share/ca-certificates

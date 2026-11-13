@@ -7,7 +7,7 @@ CSV=local_user_db.csv
 
 # copy files from GitHub
 #curl --silent https://raw.githubusercontent.com/f5education/$COURSE_ID/main/$UCS --output /tmp/$UCS
-#curl --silent https://raw.githubusercontent.com/f5education/$COURSE_ID/main/$SCF --output /tmp/$SCF
+curl --silent https://raw.githubusercontent.com/f5education/$COURSE_ID/main/$SCF --output /tmp/$SCF
 curl --silent https://raw.githubusercontent.com/f5education/$COURSE_ID/main/$CSV --output /home/student/Downloads/$CSV
 
 # copy files to bigip1

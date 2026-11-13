@@ -1,0 +1,3781 @@
+#TMSH-VERSION: 21.1.0
+
+cli admin-partitions {
+    update-partition Common
+}
+apm log-setting /Common/sslo_L3_outbound.app/sslo_L3_outbound-log-setting {
+    access {
+        general-log {
+            app-service /Common/sslo_L3_outbound.app/sslo_L3_outbound
+            publisher /Common/sys-sslo-publisher
+            type ssl-orchestrator
+            log-level {
+                access-control err
+                access-per-request err
+            }
+        }
+    }
+    app-service /Common/sslo_L3_outbound.app/sslo_L3_outbound
+    url-filters {
+        urlf {
+            app-service /Common/sslo_L3_outbound.app/sslo_L3_outbound
+            publisher /Common/sys-sslo-publisher
+        }
+    }
+}
+apm ephemeral-auth ssh-security-config /Common/ssh-security-config {
+    ciphers {
+        1 {
+            cipher-name aes256-ctr
+        }
+        2 {
+            cipher-name aes192-ctr
+        }
+        3 {
+            cipher-name aes128-ctr
+        }
+    }
+    compressions {
+        1 {
+            compression-name none
+        }
+    }
+    hmacs {
+        1 {
+            hmac-name hmac-sha2-512
+        }
+        2 {
+            hmac-name hmac-sha2-256
+        }
+    }
+    kex-methods {
+        1 {
+            kex-method-name ecdh-sha2-nistp256
+        }
+    }
+}
+apm epsec epsec-package /Common/epsec-1.0.0-1994.0.iso {
+    cache-path /config/filestore/files_d/Common_d/epsec_package_d/:Common:epsec-1.0.0-1994.0.iso_61747_1
+    oesis-version 4.3.5842.0
+    revision 1
+    version 1.0.0-1994.0
+}
+apm oauth db-instance /Common/oauthdb {
+    description "Default OAuth DB."
+}
+apm policy access-policy /Common/kerberos_auth_config_default {
+    default-ending /Common/kerberos_auth_config_default_end_deny
+    items {
+        /Common/kerberos_auth_config_default_act_kerberos_auth { }
+        /Common/kerberos_auth_config_default_end_allow { }
+        /Common/kerberos_auth_config_default_end_deny { }
+        /Common/kerberos_auth_config_default_ent { }
+    }
+    start-item /Common/kerberos_auth_config_default_ent
+}
+apm policy access-policy /Common/ssloDefault_accessPolicy {
+    app-service /Common/ssloGS_global.app/ssloGS_global
+    caption general
+    default-ending /Common/ssloDefault_end_allow
+    items {
+        /Common/ssloDefault_end_allow { }
+        /Common/ssloDefault_end_deny { }
+        /Common/ssloDefault_ent { }
+    }
+    start-item /Common/ssloDefault_ent
+}
+apm policy access-policy /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_per_req_policy {
+    app-service /Common/ssloP_L3_outbound.app/ssloP_L3_outbound
+    caption general
+    default-ending /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_per_req_policy_end_allow
+    items {
+        /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_per_req_policy_act_ip_protocol_lookup { }
+        /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_per_req_policy_act_protocol_lookup { }
+        /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_per_req_policy_act_session_check { }
+        /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_per_req_policy_act_ssl_bypass_set_1 { }
+        /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_per_req_policy_end_abort {
+            priority 7
+        }
+        /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_per_req_policy_end_allow {
+            priority 8
+        }
+        /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_per_req_policy_end_allow_Pinners_Rule {
+            priority 8
+        }
+        /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_per_req_policy_end_redirect {
+            priority 7
+        }
+        /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_per_req_policy_end_reject {
+            priority 7
+        }
+        /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_per_req_policy_ent { }
+        /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_per_req_policy_mac_pinners_rule { }
+        /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_per_req_policy_mac_sslosc_user_coaching_1 { }
+    }
+    macros { /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_sslosc_user_coaching_macro_policy /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_sslos_f5_uc_macro_policy /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_pinners_rule_macro_policy }
+    per-req-policy-properties {
+        /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_per_req_policy {
+            incomplete-action allow
+        }
+    }
+    start-item /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_per_req_policy_ent
+    type ssl-orchestrator-policy
+}
+apm policy access-policy /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_pinners_rule_macro_policy {
+    app-service /Common/ssloP_L3_outbound.app/ssloP_L3_outbound
+    caption Pinners_Rule
+    default-ending /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_pinners_rule_out
+    items {
+        /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_pinners_rule_act_sni_category_lookup { }
+        /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_pinners_rule_act_ssl_check { }
+        /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_pinners_rule_ent { }
+        /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_pinners_rule_out {
+            priority 4
+        }
+        /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_pinners_rule_out_failed {
+            priority 5
+        }
+        /Common/ssloP_L3_outbound.app/ssloP_L3_outboundpinners_rule_act_ip_protocol_lookup { }
+    }
+    start-item /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_pinners_rule_ent
+    type ssl-orchestrator-policy-macro
+}
+apm policy access-policy /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_sslos_f5_uc_macro_policy {
+    app-service /Common/ssloP_L3_outbound.app/ssloP_L3_outbound
+    caption ssloS_F5_UC
+    default-ending /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_sslos_f5_uc_out
+    items {
+        /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_sslos_f5_uc_act_ip_family_check { }
+        /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_sslos_f5_uc_act_protocol_lookup_4 { }
+        /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_sslos_f5_uc_act_svc_connect_4_t { }
+        /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_sslos_f5_uc_ent { }
+        /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_sslos_f5_uc_out {
+            priority 1
+        }
+    }
+    start-item /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_sslos_f5_uc_ent
+    type ssl-orchestrator-policy-macro
+}
+apm policy access-policy /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_sslosc_user_coaching_macro_policy {
+    app-service /Common/ssloP_L3_outbound.app/ssloP_L3_outbound
+    caption ssloSC_user_coaching
+    default-ending /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_sslosc_user_coaching_out
+    items {
+        /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_sslosc_user_coaching_act_variable_assign { }
+        /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_sslosc_user_coaching_ent { }
+        /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_sslosc_user_coaching_mac_sslos_f5_uc { }
+        /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_sslosc_user_coaching_out {
+            priority 1
+        }
+    }
+    oneshot-macro true
+    start-item /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_sslosc_user_coaching_ent
+    type ssl-orchestrator-policy-macro
+}
+apm policy access-policy /Common/sslo_L3_outbound.app/sslo_L3_outbound_accessPolicy {
+    app-service /Common/sslo_L3_outbound.app/sslo_L3_outbound
+    caption general
+    default-ending /Common/sslo_L3_outbound.app/sslo_L3_outbound_end_allow
+    items {
+        /Common/sslo_L3_outbound.app/sslo_L3_outbound_end_allow { }
+        /Common/sslo_L3_outbound.app/sslo_L3_outbound_ent { }
+    }
+    start-item /Common/sslo_L3_outbound.app/sslo_L3_outbound_ent
+}
+apm policy customization-group /Common/ssloDefault_accessProfile_eps {
+    cache-path /config/filestore/files_d/Common_d/customization_group_d/:Common:ssloDefault_accessProfile_eps_61932_1
+    revision 1
+    source /Common/standard
+    type eps
+}
+apm policy customization-group /Common/ssloDefault_accessProfile_errormap {
+    cache-path /config/filestore/files_d/Common_d/customization_group_d/:Common:ssloDefault_accessProfile_errormap_61929_1
+    revision 1
+    source /Common/standard
+    type errormap
+}
+apm policy customization-group /Common/ssloDefault_accessProfile_framework_installation {
+    cache-path /config/filestore/files_d/Common_d/customization_group_d/:Common:ssloDefault_accessProfile_framework_installation_61935_1
+    revision 1
+    source /Common/standard
+    type framework-installation
+}
+apm policy customization-group /Common/ssloDefault_accessProfile_general_ui {
+    cache-path /config/filestore/files_d/Common_d/customization_group_d/:Common:ssloDefault_accessProfile_general_ui_61923_1
+    revision 1
+    source /Common/standard
+    type general-ui
+}
+apm policy customization-group /Common/ssloDefault_end_deny_ag_logout {
+    cache-path /config/filestore/files_d/Common_d/customization_group_d/:Common:ssloDefault_end_deny_ag_logout_61920_1
+    revision 1
+    source /Common/standard
+    type logout
+}
+apm policy customization-group /Common/ssloDefault_logout {
+    cache-path /config/filestore/files_d/Common_d/customization_group_d/:Common:ssloDefault_logout_61926_1
+    revision 1
+    source /Common/standard
+    type logout
+}
+apm policy customization-group /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_per_req_policy_eps {
+    app-service /Common/ssloP_L3_outbound.app/ssloP_L3_outbound
+    cache-path /config/filestore/files_d/Common_d/customization_group_d/:Common:ssloP_L3_outbound.app:ssloP_L3_outbound_per_req_policy_eps_62822_1
+    revision 1
+    source /Common/standard
+    type eps
+}
+apm policy customization-group /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_per_req_policy_errormap {
+    app-service /Common/ssloP_L3_outbound.app/ssloP_L3_outbound
+    cache-path /config/filestore/files_d/Common_d/customization_group_d/:Common:ssloP_L3_outbound.app:ssloP_L3_outbound_per_req_policy_errormap_62819_1
+    revision 1
+    source /Common/standard
+    type errormap
+}
+apm policy customization-group /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_per_req_policy_framework_installation {
+    app-service /Common/ssloP_L3_outbound.app/ssloP_L3_outbound
+    cache-path /config/filestore/files_d/Common_d/customization_group_d/:Common:ssloP_L3_outbound.app:ssloP_L3_outbound_per_req_policy_framework_installation_62825_1
+    revision 1
+    source /Common/standard
+    type framework-installation
+}
+apm policy customization-group /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_per_req_policy_general_ui {
+    app-service /Common/ssloP_L3_outbound.app/ssloP_L3_outbound
+    cache-path /config/filestore/files_d/Common_d/customization_group_d/:Common:ssloP_L3_outbound.app:ssloP_L3_outbound_per_req_policy_general_ui_62813_1
+    revision 1
+    source /Common/standard
+    type general-ui
+}
+apm policy customization-group /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_per_req_policy_logout {
+    app-service /Common/ssloP_L3_outbound.app/ssloP_L3_outbound
+    cache-path /config/filestore/files_d/Common_d/customization_group_d/:Common:ssloP_L3_outbound.app:ssloP_L3_outbound_per_req_policy_logout_62816_1
+    revision 1
+    source /Common/standard
+    type logout
+}
+apm policy customization-group /Common/sslo_L3_outbound.app/sslo_L3_outbound_errormap {
+    app-service /Common/sslo_L3_outbound.app/sslo_L3_outbound
+    cache-path /config/filestore/files_d/Common_d/customization_group_d/:Common:sslo_L3_outbound.app:sslo_L3_outbound_errormap_62516_1
+    revision 1
+    source /Common/standard
+    type errormap
+}
+apm policy customization-group /Common/sslo_L3_outbound.app/sslo_L3_outbound_framework_installation {
+    app-service /Common/sslo_L3_outbound.app/sslo_L3_outbound
+    cache-path /config/filestore/files_d/Common_d/customization_group_d/:Common:sslo_L3_outbound.app:sslo_L3_outbound_framework_installation_62518_1
+    revision 1
+    source /Common/standard
+    type framework-installation
+}
+apm policy customization-group /Common/sslo_L3_outbound.app/sslo_L3_outbound_general_ui {
+    app-service /Common/sslo_L3_outbound.app/sslo_L3_outbound
+    cache-path /config/filestore/files_d/Common_d/customization_group_d/:Common:sslo_L3_outbound.app:sslo_L3_outbound_general_ui_62510_1
+    revision 1
+    source /Common/standard
+    type general-ui
+}
+apm policy customization-group /Common/sslo_L3_outbound.app/sslo_L3_outbound_logout {
+    app-service /Common/sslo_L3_outbound.app/sslo_L3_outbound
+    cache-path /config/filestore/files_d/Common_d/customization_group_d/:Common:sslo_L3_outbound.app:sslo_L3_outbound_logout_62512_1
+    revision 1
+    source /Common/standard
+    type logout
+}
+apm policy customization-group /Common/sslo_L3_outbound.app/sslo_L3_outbound_unknown_customization {
+    app-service /Common/sslo_L3_outbound.app/sslo_L3_outbound
+    cache-path /config/filestore/files_d/Common_d/customization_group_d/:Common:sslo_L3_outbound.app:sslo_L3_outbound_unknown_customization_62514_1
+    revision 1
+    source /Common/standard
+    type eps
+}
+apm policy customization-group-set /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_per_req_policy {
+    accept-languages { en }
+    access-policy /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_per_req_policy
+    app-service /Common/ssloP_L3_outbound.app/ssloP_L3_outbound
+    customization-group /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_per_req_policy_logout
+    customization-key c3a46a8e99d8395bc1a6ae5e03fabbd7
+    default-language en
+    eps-group /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_per_req_policy_eps
+    errormap-group /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_per_req_policy_errormap
+    framework-installation-group /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_per_req_policy_framework_installation
+    general-ui-group /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_per_req_policy_general_ui
+}
+apm policy customization-source /Common/modern { }
+apm policy customization-source /Common/standard { }
+apm policy policy-item /Common/kerberos_auth_config_default_act_kerberos_auth {
+    agents {
+        /Common/kerberos_auth_config_default_act_kerberos_auth_ag {
+            type aaa-kerberos
+        }
+    }
+    caption "Kerberos Auth"
+    color 1
+    item-type action
+    rules {
+        {
+            caption Successful
+            expression "expr {[mcget {session.kerberos.last.authresult}] == 1}"
+            next-item /Common/kerberos_auth_config_default_end_allow
+        }
+        {
+            caption fallback
+            next-item /Common/kerberos_auth_config_default_end_deny
+        }
+    }
+}
+apm policy policy-item /Common/kerberos_auth_config_default_end_allow {
+    agents {
+        /Common/kerberos_auth_config_default_end_allow_ag {
+            type ending-allow
+        }
+    }
+    caption Allow
+    color 1
+    item-type ending
+}
+apm policy policy-item /Common/kerberos_auth_config_default_end_deny {
+    agents {
+        /Common/kerberos_auth_config_default_end_deny_ag {
+            type ending-deny
+        }
+    }
+    caption Deny
+    color 2
+    item-type ending
+}
+apm policy policy-item /Common/kerberos_auth_config_default_ent {
+    caption Start
+    color 1
+    rules {
+        {
+            caption fallback
+            next-item /Common/kerberos_auth_config_default_act_kerberos_auth
+        }
+    }
+}
+apm policy policy-item /Common/ssloDefault_end_allow {
+    agents {
+        /Common/ssloDefault_end_allow_ag {
+            type ending-allow
+        }
+    }
+    app-service /Common/ssloGS_global.app/ssloGS_global
+    caption Allow
+    color 1
+    item-type ending
+}
+apm policy policy-item /Common/ssloDefault_end_deny {
+    agents {
+        /Common/ssloDefault_end_deny_ag {
+            type ending-deny
+        }
+    }
+    app-service /Common/ssloGS_global.app/ssloGS_global
+    caption Deny
+    color 2
+    item-type ending
+}
+apm policy policy-item /Common/ssloDefault_ent {
+    app-service /Common/ssloGS_global.app/ssloGS_global
+    caption Start
+    color 1
+    rules {
+        {
+            caption fallback
+            next-item /Common/ssloDefault_end_allow
+        }
+    }
+}
+apm policy policy-item /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_per_req_policy_act_ip_protocol_lookup {
+    app-service /Common/ssloP_L3_outbound.app/ssloP_L3_outbound
+    caption "IP Protocol Lookup"
+    color 1
+    item-type action
+    rules {
+        {
+            caption TCP
+            expression "expr { [ IP::protocol ] == 6 }"
+            next-item /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_per_req_policy_act_protocol_lookup
+        }
+        {
+            caption fallback
+            next-item /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_per_req_policy_end_reject
+        }
+    }
+}
+apm policy policy-item /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_per_req_policy_act_protocol_lookup {
+    agents {
+        /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_per_req_policy_act_protocol_lookup_ag {
+            type l7-protocol-lookup
+        }
+    }
+    app-service /Common/ssloP_L3_outbound.app/ssloP_L3_outbound
+    caption "L7 Protocol Lookup"
+    color 1
+    item-type action
+    rules {
+        {
+            caption HTTP(S)
+            expression "expr { [mcget {perflow.l7_protocol_lookup.result}] == \"https\" || [mcget {perflow.l7_protocol_lookup.result}] == \"http\" }"
+            next-item /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_per_req_policy_end_redirect
+        }
+        {
+            caption fallback
+            next-item /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_per_req_policy_end_reject
+        }
+    }
+}
+apm policy policy-item /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_per_req_policy_act_session_check {
+    agents {
+        /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_per_req_policy_act_session_check_ag {
+            type session-check
+        }
+    }
+    app-service /Common/ssloP_L3_outbound.app/ssloP_L3_outbound
+    caption "Session Check"
+    color 1
+    item-type action
+    rules {
+        {
+            caption "Session Found"
+            expression "expr { [mcget {perflow.session_check.session_found}] == 1 }"
+            next-item /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_per_req_policy_mac_pinners_rule
+        }
+        {
+            caption fallback
+            next-item /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_per_req_policy_act_ip_protocol_lookup
+        }
+    }
+}
+apm policy policy-item /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_per_req_policy_act_ssl_bypass_set_1 {
+    agents {
+        /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_per_req_policy_act_ssl_bypass_set_1_ag {
+            type ssl-bypass-set
+        }
+    }
+    app-service /Common/ssloP_L3_outbound.app/ssloP_L3_outbound
+    caption "SSL Bypass Set"
+    color 1
+    item-type action
+    rules {
+        {
+            caption fallback
+            next-item /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_per_req_policy_end_allow_Pinners_Rule
+        }
+    }
+}
+apm policy policy-item /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_per_req_policy_end_abort {
+    agents {
+        /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_per_req_policy_end_abort_ag {
+            type ending-abort
+        }
+    }
+    app-service /Common/ssloP_L3_outbound.app/ssloP_L3_outbound
+    caption Abort
+    color 20
+    item-type ending
+}
+apm policy policy-item /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_per_req_policy_end_allow {
+    agents {
+        /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_per_req_policy_end_allow_ag {
+            type ending-allow
+        }
+    }
+    app-service /Common/ssloP_L3_outbound.app/ssloP_L3_outbound
+    caption "All Traffic"
+    color 1
+    item-type ending
+}
+apm policy policy-item /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_per_req_policy_end_allow_Pinners_Rule {
+    agents {
+        /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_per_req_policy_end_allow_Pinners_Rule_ag {
+            type ending-allow
+        }
+    }
+    app-service /Common/ssloP_L3_outbound.app/ssloP_L3_outbound
+    caption Pinners_Rule
+    color 1
+    item-type ending
+}
+apm policy policy-item /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_per_req_policy_end_redirect {
+    agents {
+        /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_per_req_policy_end_redirect_ag {
+            type ending-redirect
+        }
+    }
+    app-service /Common/ssloP_L3_outbound.app/ssloP_L3_outbound
+    caption Redirect
+    color 16
+    item-type ending
+}
+apm policy policy-item /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_per_req_policy_end_reject {
+    agents {
+        /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_per_req_policy_end_reject_ag {
+            type ending-reject
+        }
+    }
+    app-service /Common/ssloP_L3_outbound.app/ssloP_L3_outbound
+    caption Reject
+    color 2
+    item-type ending
+}
+apm policy policy-item /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_per_req_policy_ent {
+    app-service /Common/ssloP_L3_outbound.app/ssloP_L3_outbound
+    caption Start
+    color 1
+    rules {
+        {
+            caption fallback
+            next-item /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_per_req_policy_act_session_check
+        }
+    }
+}
+apm policy policy-item /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_per_req_policy_mac_pinners_rule {
+    app-service /Common/ssloP_L3_outbound.app/ssloP_L3_outbound
+    caption Pinners_Rule
+    color 1
+    item-type macro-call
+    macro /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_pinners_rule_macro_policy
+    rules {
+        {
+            caption Pass
+            next-item /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_per_req_policy_act_ssl_bypass_set_1
+        }
+        {
+            caption Fail
+            next-item /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_per_req_policy_mac_sslosc_user_coaching_1
+        }
+    }
+}
+apm policy policy-item /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_per_req_policy_mac_sslosc_user_coaching_1 {
+    app-service /Common/ssloP_L3_outbound.app/ssloP_L3_outbound
+    caption ssloSC_user_coaching
+    color 1
+    item-type macro-call
+    macro /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_sslosc_user_coaching_macro_policy
+    rules {
+        {
+            caption Out
+            next-item /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_per_req_policy_end_allow
+        }
+    }
+}
+apm policy policy-item /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_pinners_rule_act_sni_category_lookup {
+    agents {
+        /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_pinners_rule_act_sni_category_lookup_ag {
+            type category-lookup
+        }
+    }
+    app-service /Common/ssloP_L3_outbound.app/ssloP_L3_outbound
+    caption "Category Lookup"
+    color 1
+    item-type action
+    rules {
+        {
+            caption "Category Match"
+            expression "expr { [mcget {perflow.category_lookup.result.categories}] contains \"| 1901 |\" }"
+            next-item /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_pinners_rule_out
+        }
+        {
+            caption fallback
+            next-item /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_pinners_rule_out_failed
+        }
+    }
+}
+apm policy policy-item /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_pinners_rule_act_ssl_check {
+    agents {
+        /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_pinners_rule_act_ssl_check_ag {
+            type ssl-check
+        }
+    }
+    app-service /Common/ssloP_L3_outbound.app/ssloP_L3_outbound
+    caption "SSL Check"
+    color 1
+    item-type action
+    rules {
+        {
+            caption "SSL Found"
+            expression "expr { [mcget {perflow.ssl_check.ssl_found}] == 1 }"
+            next-item /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_pinners_rule_act_sni_category_lookup
+        }
+        {
+            caption fallback
+            next-item /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_pinners_rule_out_failed
+        }
+    }
+}
+apm policy policy-item /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_pinners_rule_ent {
+    app-service /Common/ssloP_L3_outbound.app/ssloP_L3_outbound
+    caption In
+    color 1
+    rules {
+        {
+            caption fallback
+            next-item /Common/ssloP_L3_outbound.app/ssloP_L3_outboundpinners_rule_act_ip_protocol_lookup
+        }
+    }
+}
+apm policy policy-item /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_pinners_rule_out {
+    app-service /Common/ssloP_L3_outbound.app/ssloP_L3_outbound
+    caption Pass
+    color 1
+    item-type terminal-out
+}
+apm policy policy-item /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_pinners_rule_out_failed {
+    app-service /Common/ssloP_L3_outbound.app/ssloP_L3_outbound
+    caption Fail
+    color 2
+    item-type terminal-out
+}
+apm policy policy-item /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_sslos_f5_uc_act_ip_family_check {
+    app-service /Common/ssloP_L3_outbound.app/ssloP_L3_outbound
+    caption "IP Version Check"
+    color 1
+    item-type action
+    rules {
+        {
+            caption IPv4
+            expression "expr { [ IP::version ] == 4 }"
+            next-item /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_sslos_f5_uc_act_protocol_lookup_4
+        }
+        {
+            caption fallback
+            next-item /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_sslos_f5_uc_out
+        }
+    }
+}
+apm policy policy-item /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_sslos_f5_uc_act_protocol_lookup_4 {
+    agents {
+        /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_sslos_f5_uc_act_protocol_lookup_4_ag {
+            type l7-protocol-lookup
+        }
+    }
+    app-service /Common/ssloP_L3_outbound.app/ssloP_L3_outbound
+    caption "L7 Protocol Lookup"
+    color 1
+    item-type action
+    rules {
+        {
+            caption "HTTP(S) and HTTP Connect"
+            expression "expr { [mcget {perflow.l7_protocol_lookup.result}] == \"https\" || [mcget {perflow.l7_protocol_lookup.result}] == \"http\" || [mcget {perflow.l7_protocol_lookup.result}] == \"http-connect\" }"
+            next-item /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_sslos_f5_uc_act_svc_connect_4_t
+        }
+        {
+            caption fallback
+            next-item /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_sslos_f5_uc_out
+        }
+    }
+}
+apm policy policy-item /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_sslos_f5_uc_act_svc_connect_4_t {
+    agents {
+        /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_sslos_f5_uc_act_svc_connect_4_t_ag {
+            type service-connect
+        }
+    }
+    app-service /Common/ssloP_L3_outbound.app/ssloP_L3_outbound
+    caption "Service Connect (ssloS_F5_UC)"
+    color 1
+    item-type action
+    rules {
+        {
+            caption fallback
+            next-item /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_sslos_f5_uc_out
+        }
+    }
+}
+apm policy policy-item /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_sslos_f5_uc_ent {
+    app-service /Common/ssloP_L3_outbound.app/ssloP_L3_outbound
+    caption In
+    color 1
+    rules {
+        {
+            caption fallback
+            next-item /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_sslos_f5_uc_act_ip_family_check
+        }
+    }
+}
+apm policy policy-item /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_sslos_f5_uc_out {
+    app-service /Common/ssloP_L3_outbound.app/ssloP_L3_outbound
+    caption Out
+    color 1
+    item-type terminal-out
+}
+apm policy policy-item /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_sslosc_user_coaching_act_variable_assign {
+    agents {
+        /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_sslosc_user_coaching_act_variable_assign_ag {
+            type variable-assign
+        }
+    }
+    app-service /Common/ssloP_L3_outbound.app/ssloP_L3_outbound
+    caption "Variable Assign"
+    color 1
+    item-type action
+    rules {
+        {
+            caption fallback
+            next-item /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_sslosc_user_coaching_out
+        }
+    }
+}
+apm policy policy-item /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_sslosc_user_coaching_ent {
+    app-service /Common/ssloP_L3_outbound.app/ssloP_L3_outbound
+    caption In
+    color 1
+    rules {
+        {
+            caption fallback
+            next-item /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_sslosc_user_coaching_mac_sslos_f5_uc
+        }
+    }
+}
+apm policy policy-item /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_sslosc_user_coaching_mac_sslos_f5_uc {
+    app-service /Common/ssloP_L3_outbound.app/ssloP_L3_outbound
+    caption ssloS_F5_UC
+    color 1
+    item-type macro-call
+    macro /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_sslos_f5_uc_macro_policy
+    rules {
+        {
+            caption Out
+            next-item /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_sslosc_user_coaching_act_variable_assign
+        }
+    }
+}
+apm policy policy-item /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_sslosc_user_coaching_out {
+    app-service /Common/ssloP_L3_outbound.app/ssloP_L3_outbound
+    caption Out
+    color 1
+    item-type terminal-out
+}
+apm policy policy-item /Common/ssloP_L3_outbound.app/ssloP_L3_outboundpinners_rule_act_ip_protocol_lookup {
+    app-service /Common/ssloP_L3_outbound.app/ssloP_L3_outbound
+    caption "IP Protocol Check"
+    color 1
+    item-type action
+    rules {
+        {
+            caption TCP
+            expression "expr { [ IP::protocol ] == 6 }"
+            next-item /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_pinners_rule_act_ssl_check
+        }
+        {
+            caption fallback
+            next-item /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_pinners_rule_out_failed
+        }
+    }
+}
+apm policy policy-item /Common/sslo_L3_outbound.app/sslo_L3_outbound_end_allow {
+    agents {
+        /Common/sslo_L3_outbound.app/sslo_L3_outbound_end_allow_ag {
+            type ending-allow
+        }
+    }
+    app-service /Common/sslo_L3_outbound.app/sslo_L3_outbound
+    caption Allow
+    color 1
+    item-type ending
+}
+apm policy policy-item /Common/sslo_L3_outbound.app/sslo_L3_outbound_ent {
+    app-service /Common/sslo_L3_outbound.app/sslo_L3_outbound
+    caption Start
+    color 1
+    rules {
+        {
+            caption fallback
+            next-item /Common/sslo_L3_outbound.app/sslo_L3_outbound_end_allow
+        }
+    }
+}
+apm policy agent category-lookup /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_pinners_rule_act_sni_category_lookup_ag {
+    app-service /Common/ssloP_L3_outbound.app/ssloP_L3_outbound
+    lookup-type custom-only
+}
+apm policy agent ending-abort /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_per_req_policy_end_abort_ag {
+    app-service /Common/ssloP_L3_outbound.app/ssloP_L3_outbound
+}
+apm policy agent ending-allow /Common/kerberos_auth_config_default_end_allow_ag { }
+apm policy agent ending-allow /Common/ssloDefault_end_allow_ag {
+    app-service /Common/ssloGS_global.app/ssloGS_global
+}
+apm policy agent ending-allow /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_per_req_policy_end_allow_Pinners_Rule_ag {
+    app-service /Common/ssloP_L3_outbound.app/ssloP_L3_outbound
+}
+apm policy agent ending-allow /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_per_req_policy_end_allow_ag {
+    app-service /Common/ssloP_L3_outbound.app/ssloP_L3_outbound
+}
+apm policy agent ending-allow /Common/sslo_L3_outbound.app/sslo_L3_outbound_end_allow_ag {
+    app-service /Common/sslo_L3_outbound.app/sslo_L3_outbound
+}
+apm policy agent ending-deny /Common/kerberos_auth_config_default_end_deny_ag {
+    customization-group /Common/kerberos_auth_config_default_end_deny_ag
+}
+apm policy agent ending-deny /Common/ssloDefault_end_deny_ag {
+    app-service /Common/ssloGS_global.app/ssloGS_global
+    customization-group /Common/ssloDefault_end_deny_ag_logout
+}
+apm policy agent ending-redirect /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_per_req_policy_end_redirect_ag {
+    app-service /Common/ssloP_L3_outbound.app/ssloP_L3_outbound
+    close-session false
+    url "%{perflow.ending.redirect.captive.url}"
+}
+apm policy agent ending-reject /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_per_req_policy_end_reject_ag {
+    app-service /Common/ssloP_L3_outbound.app/ssloP_L3_outbound
+}
+apm policy agent kerberos /Common/kerberos_auth_config_default_act_kerberos_auth_ag { }
+apm policy agent l7-protocol-lookup /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_per_req_policy_act_protocol_lookup_ag {
+    app-service /Common/ssloP_L3_outbound.app/ssloP_L3_outbound
+}
+apm policy agent l7-protocol-lookup /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_sslos_f5_uc_act_protocol_lookup_4_ag {
+    app-service /Common/ssloP_L3_outbound.app/ssloP_L3_outbound
+}
+apm policy agent service-connect /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_sslos_f5_uc_act_svc_connect_4_t_ag {
+    app-service /Common/ssloP_L3_outbound.app/ssloP_L3_outbound
+    connector-profile /Common/ssloS_F5_UC.app/ssloS_F5_UC-t-4-connector
+}
+apm policy agent session-check /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_per_req_policy_act_session_check_ag {
+    app-service /Common/ssloP_L3_outbound.app/ssloP_L3_outbound
+}
+apm policy agent ssl-bypass-set /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_per_req_policy_act_ssl_bypass_set_1_ag {
+    app-service /Common/ssloP_L3_outbound.app/ssloP_L3_outbound
+}
+apm policy agent ssl-check /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_pinners_rule_act_ssl_check_ag {
+    app-service /Common/ssloP_L3_outbound.app/ssloP_L3_outbound
+}
+apm policy agent variable-assign /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_sslosc_user_coaching_act_variable_assign_ag {
+    app-service /Common/ssloP_L3_outbound.app/ssloP_L3_outbound
+    variables {
+        {
+            expression "return {ssloSC_user_coaching}"
+            varname perflow.service_path
+        }
+    }
+}
+apm profile access /Common/ssloDefault_accessProfile {
+    accept-languages { en }
+    access-policy /Common/ssloDefault_accessPolicy
+    app-service /Common/ssloGS_global.app/ssloGS_global
+    customization-group /Common/ssloDefault_logout
+    customization-key none
+    defaults-from /Common/access
+    domain-cookie none
+    domain-mode single-domain
+    eps-group /Common/ssloDefault_accessProfile_eps
+    errormap-group /Common/ssloDefault_accessProfile_errormap
+    framework-installation-group /Common/ssloDefault_accessProfile_framework_installation
+    general-ui-group /Common/ssloDefault_accessProfile_general_ui
+    generation 1
+    generation-action noop
+    log-settings {
+        /Common/default-sslo-log-setting
+    }
+    persistent-cookie true
+    scope public
+    type ssl-orchestrator
+    user-identity-method http
+}
+apm profile access /Common/sslo_L3_outbound.app/sslo_L3_outbound_accessProfile {
+    accept-languages { en }
+    access-policy /Common/sslo_L3_outbound.app/sslo_L3_outbound_accessPolicy
+    app-service /Common/sslo_L3_outbound.app/sslo_L3_outbound
+    customization-group /Common/sslo_L3_outbound.app/sslo_L3_outbound_logout
+    customization-key none
+    defaults-from /Common/access
+    domain-cookie none
+    domain-mode single-domain
+    eps-group /Common/sslo_L3_outbound.app/sslo_L3_outbound_unknown_customization
+    errormap-group /Common/sslo_L3_outbound.app/sslo_L3_outbound_errormap
+    framework-installation-group /Common/sslo_L3_outbound.app/sslo_L3_outbound_framework_installation
+    general-ui-group /Common/sslo_L3_outbound.app/sslo_L3_outbound_general_ui
+    generation 1
+    generation-action noop
+    log-settings {
+        /Common/sslo_L3_outbound.app/sslo_L3_outbound-log-setting
+    }
+    named-scope none
+    persistent-cookie true
+    primary-auth-service none
+    scope public
+    type ssl-orchestrator
+    user-identity-method http
+}
+apm report default-report {
+    report-name sessionReports/sessionSummary
+    user /Common/admin
+}
+auth user admin {
+    description "Admin User"
+    encrypted-password $6$bmPJnTU8$0/Tz3qO.FhdIp2NOxoTtxKvycATYQkXVtYzsacjIOl/IvDBkgc9KTNDM2Ew6zgvxXfarFob1o9pqbwV2PhaHA/
+    partition-access {
+        all-partitions {
+            role admin
+        }
+    }
+    session-limit -1
+    shell tmsh
+}
+auth user root {
+    description root
+    encrypted-password $6$Tan3bSvj$pWN3mZgV5r3X715kePb2Eje4SAjIJBHkf.yajyg3NK2ZKBhRQP5j0lk3gnBsNxP/ksJGmIg9uRRf3LCgAfYFG1
+    session-limit -1
+    shell bash
+}
+cm cert /Common/dtca-bundle.crt {
+    cache-path /config/filestore/files_d/Common_d/trust_certificate_d/:Common:dtca-bundle.crt_60151_1
+    certificate-text "-----BEGIN CERTIFICATE-----
+MIIDijCCAnKgAwIBAgIDDi4GMA0GCSqGSIb3DQEBBQUAMC4xLDAqBgNVBAMTIzYw
+N2IzNjE0LTAwYjUtNDE3YS05OTM0MDAxNTVkMDE4MDEwMB4XDTI2MTExMjE4MDkx
+NVoXDTM2MTEwOTE4MDkxNVowLjEsMCoGA1UEAxMjNjA3YjM2MTQtMDBiNS00MTdh
+LTk5MzQwMDE1NWQwMTgwMTAwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIB
+AQDk9W61Og8pysL7d83g8Ru3s23aRB9EKYdFvAiQrhAMCzZBRJclLURHrRcu4CtY
+V8g9FctnGC0d0LZCfgsanskC27o3zUnAeQV3EMSXcPj0hIjy6gr+Ue6bpibyE5Qq
+/mKrsXvI9W7gflE8t1gSEJiC8EzTk+ejWFrBQJIKKQYerrjlVs1TckV1uc7nsoPG
+1TIH3nz7JZoJ+hi9KVQouZnqzxTtj0cZRbbQ/vuBr/nTRCPpi+t8cVpjOIv/ij17
+30yOyvnSFzh0CXqxVA2CGO9ncOPfZqk69zU2Bzt/uqHOgDC1ZJE6JyryctF28gD3
+Gyfd2VeOi7gu7+tu38yhn6IXAgMBAAGjgbAwga0wEQYDVR0RBAowCIIGYmlnaXAx
+MA8GA1UdEwEB/wQFMAMBAf8wDgYDVR0PAQH/BAQDAgG2MB0GA1UdDgQWBBTfWrLC
+VPoJlyQ5UptmFbuAYcdSsDBYBgNVHSMEUTBPgBTfWrLCVPoJlyQ5UptmFbuAYcdS
+sKEypDAwLjEsMCoGA1UEAxMjNjA3YjM2MTQtMDBiNS00MTdhLTk5MzQwMDE1NWQw
+MTgwMTCCAw4uBjANBgkqhkiG9w0BAQUFAAOCAQEAUphFGiHMSXwCsVetyFETV51e
+rZJ0Qm3nBHC39bVW1E1n3EeH3SFAPNKlbOmm9wjc8uUnA+tvFkfTKj5qq9qsmbid
+ZzHYG1Hk7Mxb2rWggYgNG4FPgCKZUMbOAm+BHGyz5s/ynd6cZDJjDMMvrBhGD2dW
+3uW10r/70Gb72f6xsQqRyyBE1XpFifXt0hIrDX9FGwHju5zviUQ7KZ09/QX/MdPm
+Ien4UIUmUJ4YS+Y+IIbQY8gEgQAMsTcpPnQIb+lMJbRVXa9mbXgSnvRHld4Iy1yO
+30mHAlzNb99PzyJxQdGGqZk48n7sE3FGpfr6eSi8WZYXn40OLl+k4szzHcs1ag==
+-----END CERTIFICATE-----
+"
+    checksum SHA1:1289:81e26963c4b1de01a95f8c2ee34ed62132e65789
+    revision 1
+}
+cm cert /Common/dtca.crt {
+    cache-path /config/filestore/files_d/Common_d/trust_certificate_d/:Common:dtca.crt_60147_1
+    certificate-text "-----BEGIN CERTIFICATE-----
+MIIDijCCAnKgAwIBAgIDDi4GMA0GCSqGSIb3DQEBBQUAMC4xLDAqBgNVBAMTIzYw
+N2IzNjE0LTAwYjUtNDE3YS05OTM0MDAxNTVkMDE4MDEwMB4XDTI2MTExMjE4MDkx
+NVoXDTM2MTEwOTE4MDkxNVowLjEsMCoGA1UEAxMjNjA3YjM2MTQtMDBiNS00MTdh
+LTk5MzQwMDE1NWQwMTgwMTAwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIB
+AQDk9W61Og8pysL7d83g8Ru3s23aRB9EKYdFvAiQrhAMCzZBRJclLURHrRcu4CtY
+V8g9FctnGC0d0LZCfgsanskC27o3zUnAeQV3EMSXcPj0hIjy6gr+Ue6bpibyE5Qq
+/mKrsXvI9W7gflE8t1gSEJiC8EzTk+ejWFrBQJIKKQYerrjlVs1TckV1uc7nsoPG
+1TIH3nz7JZoJ+hi9KVQouZnqzxTtj0cZRbbQ/vuBr/nTRCPpi+t8cVpjOIv/ij17
+30yOyvnSFzh0CXqxVA2CGO9ncOPfZqk69zU2Bzt/uqHOgDC1ZJE6JyryctF28gD3
+Gyfd2VeOi7gu7+tu38yhn6IXAgMBAAGjgbAwga0wEQYDVR0RBAowCIIGYmlnaXAx
+MA8GA1UdEwEB/wQFMAMBAf8wDgYDVR0PAQH/BAQDAgG2MB0GA1UdDgQWBBTfWrLC
+VPoJlyQ5UptmFbuAYcdSsDBYBgNVHSMEUTBPgBTfWrLCVPoJlyQ5UptmFbuAYcdS
+sKEypDAwLjEsMCoGA1UEAxMjNjA3YjM2MTQtMDBiNS00MTdhLTk5MzQwMDE1NWQw
+MTgwMTCCAw4uBjANBgkqhkiG9w0BAQUFAAOCAQEAUphFGiHMSXwCsVetyFETV51e
+rZJ0Qm3nBHC39bVW1E1n3EeH3SFAPNKlbOmm9wjc8uUnA+tvFkfTKj5qq9qsmbid
+ZzHYG1Hk7Mxb2rWggYgNG4FPgCKZUMbOAm+BHGyz5s/ynd6cZDJjDMMvrBhGD2dW
+3uW10r/70Gb72f6xsQqRyyBE1XpFifXt0hIrDX9FGwHju5zviUQ7KZ09/QX/MdPm
+Ien4UIUmUJ4YS+Y+IIbQY8gEgQAMsTcpPnQIb+lMJbRVXa9mbXgSnvRHld4Iy1yO
+30mHAlzNb99PzyJxQdGGqZk48n7sE3FGpfr6eSi8WZYXn40OLl+k4szzHcs1ag==
+-----END CERTIFICATE-----
+"
+    checksum SHA1:1289:81e26963c4b1de01a95f8c2ee34ed62132e65789
+    revision 1
+}
+cm cert /Common/dtdi.crt {
+    cache-path /config/filestore/files_d/Common_d/trust_certificate_d/:Common:dtdi.crt_60143_1
+    certificate-text "-----BEGIN CERTIFICATE-----
+MIIDVzCCAj+gAwIBAgIDAo8DMA0GCSqGSIb3DQEBBQUAMC4xLDAqBgNVBAMTIzYw
+N2IzNjE0LTAwYjUtNDE3YS05OTM0MDAxNTVkMDE4MDEwMB4XDTI2MTExMjE4MDkx
+NloXDTM2MTEwOTE4MDkxNlowETEPMA0GA1UEAxMGYmlnaXAxMIIBIjANBgkqhkiG
+9w0BAQEFAAOCAQ8AMIIBCgKCAQEA3IdjOSmNgX1e+4RTWP+dZkp7GoVML5qk7ZBo
+iCzKyCw8yAM9pgfOqUJrgI5ZskWnF7MHiC6h256RF5ldlaRY+59EKHAIf30Uw80+
+e+w3aSy7N8eglpFsgIWb1xzEy4J3c61O+qIDpSfeJe2LbqfK6gpMNDQ/f117pYM7
+7UdcpBZoJfIuluNMq4QO2BwQT0WcTuVQ5saphqthDQz2S6IgimaP9q9BjpOoEKK7
+Q8AoWK8ybvPPY6Asvhba3+iSZYaiETAwUuf2GT4mPeiZoK7+SfhCp4lYxLMwD9Jf
+8kGvOBA/rbmLUmnc8j+b0n1BGBFYsNQw15M6XhTYumWwR7VPVQIDAQABo4GaMIGX
+MAwGA1UdEwEB/wQCMAAwDgYDVR0PAQH/BAQDAgWgMB0GA1UdDgQWBBTR1ZPei9uW
+U1fKUnUwtGR4daBb8DBYBgNVHSMEUTBPgBTfWrLCVPoJlyQ5UptmFbuAYcdSsKEy
+pDAwLjEsMCoGA1UEAxMjNjA3YjM2MTQtMDBiNS00MTdhLTk5MzQwMDE1NWQwMTgw
+MTCCAw4uBjANBgkqhkiG9w0BAQUFAAOCAQEAKzTXdmfAUchS6QBG7PguTwKJniDf
+JcZP8FfzORR7ocpRvoTiiBaj/LfaTLV/Xpwg2yMzgTt3ObGrh1uNolDIltd5BBU2
+AmJJ/tnyIwfSaKLgJYNpOQjYWErJ5bEn2WOv+OwKO/1pwjItOUahBt05shshkFiK
+tCUstSz3ls4VxJiorbAiehCk8RkkNXvmLqzS8p3VtW4S+dx/Y0MoOfmCVGJ27+2M
+IXOBufqC0ush8l7tQp+FXEZVI+yBr7goBldf/cBMiLQJjLqykvcuP6VxPjgXYP5D
+SYm2DkEhxJaD7roRj5XDVNfh3nCE/oeYTILlbSOZScuMe4bfPEDo1xeoDA==
+-----END CERTIFICATE-----
+"
+    checksum SHA1:1220:c1e13d76bb9341753c026c2c1afc3efeb8ec5b70
+    revision 1
+}
+cm device /Common/sslo1 {
+    active-modules { "APM, Base, VE GBB (500 CCU)|ZVGQAOQ-CJYBRHX|Anti-Virus Checks|Base Endpoint Security Checks|Firewall Checks|Network Access|Secure Virtual Keyboard|APM, Web Application|Machine Certificate Checks|Protected Workspace|Remote Desktop|App Tunnel|APM, Base, VE GBB (500 CCU)" "Best Bundle, VE-3G|ZAGXYDV-LCQJJVI|Rate Shaping|DNSSEC|GTM Licensed Objects, Unlimited|DNS Licensed Objects, Unlimited|DNS Rate Fallback, 250K|GTM Rate Fallback, 250K|GTM Rate, 250K|DNS Rate Limit, 250K QPS|Routing Bundle, VE|DNS-GTM, Base, 3Gbps|SSL, VE|Max Compression, VE|Advanced Web Application Firewall, VE|AFM, VE|Exclusive Version, v17.1.X - 23.X|PSM, VE|VE, Carrier Grade NAT (AFM ONLY)|Best Bundle, VE-3G" "SSL Orchestrator, VE (3G/5G/10G)|BDWHLPO-DEABHLW" }
+    base-mac 00:15:5d:01:80:10
+    build 0.0.38
+    cert /Common/dtdi.crt
+    chassis-id 72764d56-50a5-fecc-e8326526b56c
+    configsync-ip 172.17.1.31
+    edition Final
+    hostname sslo1.f5trn.com
+    key /Common/dtdi.key
+    management-ip 192.168.1.31
+    marketing-name "BIG-IP Virtual Edition"
+    mirror-ip 172.17.1.31
+    optional-modules { "Advanced Protocols, VE" "App Mode (TMSH Only, No Root/Bash)" "Best, 3 Gbps -5 Gbps Upgrade" "BIG-IP VE, Multicast Routing" "BIG-IP VE, Privileged User Access, 100 Endpoints" "BIG-IP VE, Privileged User Access, 1000 Endpoints" "BIG-IP VE, Privileged User Access, 250 Endpoints" "BIG-IP VE, Privileged User Access, 50 Endpoints" "BIG-IP VE, Privileged User Access, 500 Endpoints" "CGN, ADD-VE, 3G" "Concurrent Users and Access Sessions, VE" "DataSafe, VE-3G" "DNS and GTM (250 QPS), VE" "EDR Sensor, 1 Year (VE)" "External Interface and Network HSM, VE" "FIPS 140, BIG-IP VE-1G to 10G" "Intrusion Prevention System, VE-3G" "IP Intelligence, 1Yr, VE-1G/VE-3G/VE-5G" "IP Intelligence, 3Yr, VE-1G/VE-3G/VE-5G" "IPS, 1Yr, VE-1G / VE-3G / VE-5G" "IPS, 3Yr, VE-1G / VE-3G / VE-5G" "PEM, ADD-VE, 3G" "Secure Web Gateway, VE-3G-10G, 10000 Sessions, 1Yr" "Secure Web Gateway, VE-3G-10G, 10000 Sessions, 3Yr" "Secure Web Gateway, VE-3G-10G, 5000 Sessions, 1Yr" "Secure Web Gateway, VE-3G-10G, 5000 Sessions, 3Yr" "SM2 ADD-ON, VE (25MBPS TO 10GBPS)" "Threat Campaigns, 1Yr, HIGH PERFORMANCE VE-3G" "Threat Campaigns, 3Yr, HIGH PERFORMANCE VE-3G" "URL Filtering, VE-3G-10G, 10000 Sessions, 1Yr" "URL Filtering, VE-3G-10G, 10000 Sessions, 3Yr" "URL Filtering, VE-3G-10G, 5000 Sessions, 1Yr" "URL Filtering, VE-3G-10G, 5000 Sessions, 3Yr" "VE SSL Compression Offload, Medium" "VPN Users" }
+    platform-id Z100
+    product BIG-IP
+    self-device true
+    time-zone America/Los_Angeles
+    unicast-address {
+        {
+            effective-ip management-ip
+            effective-port 1026
+            ip management-ip
+        }
+        {
+            effective-ip 172.16.1.31
+            effective-port 1026
+            ip 172.16.1.31
+        }
+    }
+    version 21.1.0
+}
+cm device-group /Common/device_trust_group {
+    auto-sync enabled
+    devices {
+        /Common/sslo1 { }
+    }
+    hidden true
+    network-failover disabled
+}
+cm device-group /Common/gtm {
+    devices {
+        /Common/sslo1 { }
+    }
+    hidden true
+    network-failover disabled
+}
+cm key /Common/dtca.key {
+    cache-path /config/filestore/files_d/Common_d/trust_certificate_key_d/:Common:dtca.key_60149_1
+    certificate-text "-----BEGIN PRIVATE KEY-----
+MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDk9W61Og8pysL7
+d83g8Ru3s23aRB9EKYdFvAiQrhAMCzZBRJclLURHrRcu4CtYV8g9FctnGC0d0LZC
+fgsanskC27o3zUnAeQV3EMSXcPj0hIjy6gr+Ue6bpibyE5Qq/mKrsXvI9W7gflE8
+t1gSEJiC8EzTk+ejWFrBQJIKKQYerrjlVs1TckV1uc7nsoPG1TIH3nz7JZoJ+hi9
+KVQouZnqzxTtj0cZRbbQ/vuBr/nTRCPpi+t8cVpjOIv/ij1730yOyvnSFzh0CXqx
+VA2CGO9ncOPfZqk69zU2Bzt/uqHOgDC1ZJE6JyryctF28gD3Gyfd2VeOi7gu7+tu
+38yhn6IXAgMBAAECggEANXc6ywcr006OCbsIUKb9GgDEflu6EWjBNf+a4G5FQQq9
+OLCTuxK/Bx3cdA3VEWQuVlVokkKLBpNefFiCr0y1E/3LloxR1KhuJke8IME44aCx
+ekg9GPZ5Cc/a+FyqFQAieoWPqnXl1nao8cy+vDkz5B/JUP8Q8IwJZWd2svixfShO
+1jH1n1IN6FBHnIpqbBQ9sNbrH0UTu0coX9VusCnDq2yJvpVdtlYgQ3NL/u0iJzNK
+0cneBMWY9OgKpa1paZqhsXph/faIXfjXMJ6occaQ/SmgBPP/lIYzkIEdMu5NezlU
+V/zaYz5Rs+qxk0iAmnReljGsQtdLc2RCSejedKXiwQKBgQD5UCrMgdYCd3xY50/I
+CAUyCUqZnO1yU5barL1uGbKf4V2+F7mu9IMFGyTkDqnX2Fg469CZZKMc1HgTgawt
+dK7QwvfqjEOQQ2FueAey/EBHnFTOS+/bkf7hkDS+CFajGf1+y077eYMgJwU23ibp
+stV9+ZyP2q8FUmzaVWY8v8+PrQKBgQDrGYH8g92c4aH2QWONvG0TlMglX0leK/fb
+UioVVnrvgxUvCcWZBLaKNOwqrrB4FqpPzq6cYvPh2SPGAycCqZSpF8RIAdY6P1tI
+Jrus0M2AhXqb9NGXlmfuomX/39iuHoRO3VntiaDhrJNiKHuJO5/Xe1E2st2p+/b+
+qa5qUeHhUwKBgQCfo0GEaa6LLc8lbheb0ebhvylRazZvei6iHvG8yh+iWEAaND7l
+VBOA9XyNuwXt+82hxP1w+wumrjWk5+dDw+8cJXtxaBbrDPoaLilf5j2SnPuAjQcs
+5TL7Y8ch110CWuYChlQwmgHoWJPyKhVoluY1H9usES74jWq98ujgBUH2kQKBgQCR
+ZHsBAUQCi3+wXYwF0avbWj3U7vLerG5iUpP4Ej2A9h4Zsv9ivIlvO396fgJgohO9
+u2I9EO0mlTUMdlKf0ORBFpOqvIgSCbCYFGwoWhFdFC9ZV7Ru/PNVn1VZQsQsGm9U
+novI3T6DkkirgcG0gw09I+R74W44e7yqjaFx2yXIRQKBgD+wZlkQB9ycih0KAm/P
+DN5vekbKT+GNEcbdlDiVl/jOLUvbJMRKit1V4TaqcsCzR9/o7JxLZDpNCjf7YuAL
+9bAscX7kaaGdbG6bvLjqsLSycGWTs2egZTwDEZIti1q0254xphl5If9bVCRt9HTY
+DPyRShLYk4UfrnHunnXI9xsj
+-----END PRIVATE KEY-----
+"
+    checksum SHA1:1704:6d24b8054230ae3fdaa4c9ce8106d251b3daa7df
+    revision 1
+}
+cm key /Common/dtdi.key {
+    cache-path /config/filestore/files_d/Common_d/trust_certificate_key_d/:Common:dtdi.key_60145_1
+    certificate-text "-----BEGIN PRIVATE KEY-----
+MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDch2M5KY2BfV77
+hFNY/51mSnsahUwvmqTtkGiILMrILDzIAz2mB86pQmuAjlmyRacXsweILqHbnpEX
+mV2VpFj7n0QocAh/fRTDzT577DdpLLs3x6CWkWyAhZvXHMTLgndzrU76ogOlJ94l
+7Ytup8rqCkw0ND9/XXulgzvtR1ykFmgl8i6W40yrhA7YHBBPRZxO5VDmxqmGq2EN
+DPZLoiCKZo/2r0GOk6gQortDwChYrzJu889joCy+Ftrf6JJlhqIRMDBS5/YZPiY9
+6Jmgrv5J+EKniVjEszAP0l/yQa84ED+tuYtSadzyP5vSfUEYEViw1DDXkzpeFNi6
+ZbBHtU9VAgMBAAECggEAEIACwQqmX0tpmWkHsW+Cr94fwta5YhBwiaPV5mZvj7Wb
+oJ15ddw8rrZdA8Pi2y9R9rh69koC60M8eOcNNP6Ud9MtTtc/E4bg0FuhcrU0Wiay
+JVTG460i0KTuiZRJ9y4eUOXlNGR94FQQz4ar+Y4NZSB7HibQn293qmUczT6bJF2z
+NrIBNIouIqsZgeac1m8msgo6SuKyOT6eZoJ7mnL17hoqF9UDo/3MWM5UsQv95iPN
+vbctjJP87pjzvkgPF83NkFCRfEYt3wcCieB9P18cwZeeHwwtSnCFjRHCf9/DK69S
+N5bYIN1/7WXVZ2p2XJlzOBb2eFH90eW1/FtQRlxpsQKBgQD6xJyiofjeE5yh/dvy
+xJlzgb9z0ESSa53+hmvvm6BZ/0Bd6aBTMsgqKg9uK2panVtaeRsN0HmqfT+h3WTL
+UcGXMYQfy1TNie6wRtMWW/TByPcOGcODD8aU5wP5QRZptFPVZ5u461NQC5UUXaDn
+5l43FFZf1O8ydl/XNphuoQW8GQKBgQDhIUOXrMwDDblrzvD0yoyRJ4X14XCRo9gt
+gJrpdG9JjiVtpWut6HIEMwYvImAkwUTDBipyfjaWlWxPUP48tUeEJVYWzX+Sr+Tm
+0VzSZXgOeOScSBy+J6+01z3jCylJCpazQ8pAk26H8ljVpoRj5Lq8qnKQBe6Mx35M
+ZzPWaFcUnQKBgAF9C0T32ydOTH61qAmP2y1RVtaUJOQNmXl6SMe6T8BZAIPOMDJu
+ObvuVfscbNwu1Oz7jQqO8zns1mTakI+YY6LHG3ao2U8DA5SuRvB6CUDhNX4y7vMn
+M9GMcXyYQ07LUDgTDlyRoQP3naHqUFswBd0j1MNq2ySciUMYwtzdPdB5AoGBAMD3
+cCZb2GptoxdDQ8muq5nnlK1S1Ngg5jTqXN3qDVGw42f+ODPSX5g13AEep+YZOsUn
+Tc7hXAzqevHpbGHAyFH+ZrIY5lZnKf6mSbeVfbh56woBzZE4FyUcsVEgyfxvdQim
+/H8pX75q/bXzitrMvTrlpljInNZSUHFQrGAFA08JAoGBAJ59/Rji20INEAQJ1GZ1
+Wsh+a7PBKPxdSnq8HmgL6vCXI28aAo6p8xNpKmVLGbFqzwWThrxQOoCH9V+8crGl
+xFK1+F4dWTV0ZVh3PDPrXqS1kfEf6ObKU1+5vS/D4OwWpIbINoaWtZkaa99CgPm1
+smqXjJD5w5+1cwejQD/6KenF
+-----END PRIVATE KEY-----
+"
+    checksum SHA1:1704:d09c0feb76af0092e580ca1354e7cddf5031503a
+    revision 1
+}
+cm traffic-group /Common/traffic-group-1 {
+    unit-id 1
+}
+cm traffic-group /Common/traffic-group-local-only { }
+cm trust-domain /Common/Root {
+    ca-cert /Common/dtca.crt
+    ca-cert-bundle /Common/dtca-bundle.crt
+    ca-devices { /Common/sslo1 }
+    ca-key /Common/dtca.key
+    guid be0ed204-eee8-430e-957300155d018010
+    status standalone
+    trust-group /Common/device_trust_group
+}
+gtm global-settings metrics {
+    metrics-collection-protocols { icmp }
+}
+gtm global-settings metrics-exclusions {
+    addresses none
+}
+ilx global-settings {
+    debug-port-blacklist { 47019 54321 60000 }
+}
+ltm default-node-monitor {
+    rule none
+}
+ltm ifile /Common/user-blocking-html {
+    file-name /Common/user-blocking-html
+}
+ltm ifile /Common/user-coaching-html {
+    file-name /Common/user-coaching-html
+}
+ltm node /Common/172.16.100.10 {
+    address 172.16.100.10
+}
+ltm node /Common/172.16.100.20 {
+    address 172.16.100.20
+}
+ltm pool /Common/juice_pool {
+    members {
+        /Common/172.16.100.20:3000 {
+            address 172.16.100.20
+        }
+    }
+    monitor /Common/gateway_icmp
+}
+ltm pool /Common/webserver_pool {
+    members {
+        /Common/172.16.100.10:80 {
+            address 172.16.100.10
+        }
+    }
+    monitor /Common/gateway_icmp
+}
+ltm rule /Common/ssloS_F5_UC.app/ssloS_F5_UC-f5-tenant-restrictions {
+    app-service /Common/ssloS_F5_UC.app/ssloS_F5_UC
+# Copyright (c) 2018.  F5 Networks, Inc.  See End User License Agreement (EULA) for license terms.
+# Notwithstanding anything to the contrary in the EULA, Licensee may copy and modify
+# this software product for its internal business purposes. Further, Licensee may upload,
+# publish and distribute the modified version of the software product on devcentral.f5.com.
+
+when HTTP_REQUEST {
+    switch -glob [string tolower [HTTP::host]] {
+        "login.microsoftonline.com" -
+        "login.microsoft.com" -
+        "login.windows.net" {
+            HTTP::header replace "Restrict-Access-To-Tenants" {F5UC}
+            HTTP::header replace "Restrict-Access-Context" {F5UC}
+        }
+    }
+}
+}
+ltm rule /Common/sslo_L3_outbound.app/sslo_L3_outbound-in_t {
+    app-service /Common/sslo_L3_outbound.app/sslo_L3_outbound
+# Copyright (c) 2018.  F5 Networks, Inc.  See End User License Agreement (EULA) for license terms.
+# Notwithstanding anything to the contrary in the EULA, Licensee may copy and modify
+# this software product for its internal business purposes. Further, Licensee may upload,
+# publish and distribute the modified version of the software product on devcentral.f5.com.
+
+when CLIENT_ACCEPTED {
+ SSL::disable serverside
+ HTTP::disable
+
+ sharedvar ctx
+
+ set ctx(log) 0
+ set srcIP [IP::client_addr]
+ set dstIP [IP::local_addr]
+ set srcPort [TCP::client_port]
+ set dstPort [TCP::local_port]
+ set ctx(SNI) ""
+ set ctx(ptcl) "unknown"
+ set ctx(xpinfo) ""
+ set ctx(cssl_mode) [SSL::mode]
+
+ sharedvar XPHOST
+ if { [info exists XPHOST] } {
+  if { $XPHOST eq "" } {
+   call /Common/sslo_L3_outbound.app/sslo_L3_outbound-lib::log 0 "CLIENT_ACCEPTED invalid host (${XPHOST}) for explicit-proxy client ${srcIP}_${srcPort}"
+   TCP::respond "HTTP/1.1 500 Server Error\r\nConnection: close\r\n\r\n"
+   TCP::close
+   return
+  }
+
+  if {$ctx(log)} {
+   set ctx(xpinfo) "\x20explicit-proxy request ${XPHOST}"
+  }
+
+  set ctx(ptcl) "http"
+ } else {
+  # maintain the next two lists in lockstep (!)
+  if {[set x [lsearch -integer -sorted [list 21 22 25 53 80 110 115 143 443 465 587 990 993 995 3128 8080] [TCP::local_port]]] >= 0} {
+   set ctx(ptcl) [lindex [list "ftp" "ssh" "smtp" "dns" "http" "pop3" "sftp" "imap" "https" "smtps" "smtp" "ftps" "imaps" "pop3s" "http" "http"] $x]
+  }
+ }
+
+ if {$ctx(log) > 1} {
+  call /Common/sslo_L3_outbound.app/sslo_L3_outbound-lib::log 2 "CLIENT_ACCEPTED TCP from ${srcIP}_${srcPort} to ${dstIP}_${dstPort}${ctx(xpinfo)} L7 guess=$ctx(ptcl)"
+ }
+
+ if {$ctx(cssl_mode) eq 1} {
+  # client-SSL is disabled by default for the outbound topology.
+  # If we are here, it means client-SSL is explicitly enabled (via LTM policy or another iRule).
+  # This is typically done when waiting for SSL data is necessary before initiating the server-side
+  # connection, likely to utilize SSL data (ex: SNI) for dynamic egress selection in LTM policy.
+  # So, start collecting the data and do not dispatch a probe.
+  set ctx(csf) true
+  TCP::collect 1
+ }
+ else {
+  TCP::collect 1 0 ; # dispatch probe
+ }
+} ; #CLIENT_ACCEPTED
+
+
+when SERVER_CONNECTED {
+ if { not [info exists ctx(csf)] } {
+  #initial connection, currently a probe, listen for SSF
+  TCP::collect 1
+ }
+
+ if {$ctx(log) > 1} {
+  set didsnat ""
+  set snatIP [IP::local_addr]
+  set snatPort [TCP::local_port]
+  if {($snatIP ne $srcIP) || ($snatPort ne $srcPort)} {
+   # even when we do not deliberately SNAT (e.g., when in split mode)
+   # TMOS may give us a fresh client ephemeral port.  Possible reasons
+   # include DAG on the exit VLAN and "at the moment, the requested
+   # client port belongs to the TCB for an earlier connection now
+   # stuck in TCP TIME/WAIT state"
+   set didsnat "SNAT ${snatIP}_${snatPort}"
+  }
+  call /Common/sslo_L3_outbound.app/sslo_L3_outbound-lib::log 2 "SERVER_CONNECTED ${srcIP}_${srcPort} to ${dstIP}_${dstPort} ${didsnat}"
+ }
+} ; #SERVER_CONNECTED
+
+when SERVER_DATA {
+ set len [TCP::payload length]
+ if { [info exists ctx(csf)] } {
+  #someone beat us to it
+  TCP::release
+  return
+ } elseif {!$len} {
+  if {$ctx(log) > 1} {
+   call /Common/sslo_L3_outbound.app/sslo_L3_outbound-lib::log 2 "SERVER_DATA got empty payload, retrying"
+  }
+  TCP::collect
+  return
+ } elseif {[info exists proxyconnect] && ($proxyconnect)} {
+  TCP::release
+  TCP::collect
+  return
+ } else {
+  set ctx(ssf) true
+  set said [TCP::payload]
+ }
+
+ set ctx(ptcl) [call /Common/sslo_L3_outbound.app/sslo_L3_outbound-lib::ssf_ptcl $ctx(ptcl) $said]
+
+ call /Common/sslo_L3_outbound.app/sslo_L3_outbound-lib::log 2 "SERVER_DATA server spoke first ${len} bytes, L7 guess=$ctx(ptcl)"
+
+ TCP::release
+} ; #SERVER_DATA
+
+when HTTP_PROXY_CONNECT  {
+ set proxyconnect true
+}
+
+when HTTP_PROXY_RESPONSE {
+  set proxyconnect false
+}
+
+when HTTP_REQUEST {
+ if {[HTTP::method] eq "CONNECT"} {
+  if {$ctx(log) > 1} {
+   call /Common/sslo_L3_outbound.app/sslo_L3_outbound-lib::log 2 "HTTP_REQUEST [HTTP::method] [HTTP::uri] $dstIP:$dstPort."
+  }
+  set connhost "" ; set connport ""
+  if {[regexp {^([A-Za-z\d\.-]+):(\d+)} [HTTP::uri] junk connhost connport] ||
+      [regexp {^\[([a-fA-F\d:]+)\]:(\d+)} [HTTP::uri] junk connhost connport]} {
+   set connhost [string tolower $connhost]
+  } else { unset connhost; unset connport }
+ } else {
+   event HTTP_RESPONSE_RELEASE disable
+ }
+} ; #HTTP_REQUEST
+
+when HTTP_RESPONSE_RELEASE {
+ if { [HTTP::status] == 200 } {
+  call /Common/sslo_L3_outbound.app/sslo_L3_outbound-lib::log 2 "HTTP_RESPONSE_RELEASE HTTP CONNECT success. Ready for HTTP tunnel."
+  set ctx(httpconn) 1
+  SSL::disable clientside
+  SSL::disable serverside
+
+  if { [info exists ctx(csf)] } {
+   unset ctx(csf)
+   call /Common/sslo_L3_outbound.app/sslo_L3_outbound-lib::log 2 "HTTP_RESPONSE_RELEASE HTTP-CONNECT $connhost:$connport, L7 guess=$ctx(ptcl)"
+  }
+  if { [info exists ctx(ssf)] } {
+   unset ctx(ssf)
+  }
+
+  TCP::collect
+  serverside {TCP::collect}
+ } else {
+  call /Common/sslo_L3_outbound.app/sslo_L3_outbound-lib::log 2 "HTTP_RESPONSE_RELEASE HTTP response code [HTTP::status]."
+ }
+} ; #HTTP_RESPONSE_RELEASE
+
+when CLIENT_DATA {
+ set len [TCP::payload length]
+ if { [info exists ctx(ssf)] } {
+  #someone beat us to it
+  TCP::release
+  return
+ } elseif {!$len} {
+  call /Common/sslo_L3_outbound.app/sslo_L3_outbound-lib::log 2 "CLIENT_DATA got empty payload, retrying"
+  TCP::collect
+  return
+ } else {
+  set ctx(csf) true
+  set said [TCP::payload]
+  if {$ctx(cssl_mode) eq 0} {
+   # release accepted event, if held, to proxy for creating connection to server
+   TCP::release 0
+  }
+ }
+
+ # got at least one octet
+
+ if {($len < 44) &&
+     ( ([binary scan $said c type] == 1) &&
+       (($type & 0xff) == 22) )} {
+  # may be partial TLS Client Hello (unusual)
+  # allow up to 7 seconds for the rest to arrive
+  # by modifying the connection idle timer. This will be
+  # reset after we get the complete hello (or plaintext data)
+  if {$ctx(log) > 1} {
+   call /Common/sslo_L3_outbound.app/sslo_L3_outbound-lib::log 2 "CLIENT_DATA Incomplete Client Hello, set idle timeout to 7 sec"
+  }
+  set ipIdleTmo [IP::idle_timeout]
+  IP::idle_timeout 7
+ } ; #(partial Client Hello)
+
+ if {[info exists ctx(httpconn)] && ([ACCESS::perflow get perflow.ssl_bypass_set] == 1)} {
+  call /Common/sslo_L3_outbound.app/sslo_L3_outbound-lib::log 2 "CLIENT_DATA SSL bypass set inside HTTP CONNECT"
+  CONNECTOR::enable
+ }
+
+ SSL::enable clientside
+
+ after 0 { TCP::release }
+} ; #CLIENT_DATA
+
+
+when CLIENTSSL_PASSTHROUGH {
+ #Reset connection idle timer
+ if {[info exists ipIdleTmo]} {
+  IP::idle_timeout $ipIdleTmo
+ }
+
+ #csf_ptcl needs at least 8 bytes for http traffic to find the
+ #http method. SSL ingress processing ensures we have at least
+ #9 bytes before it calls CLIENTSSL_PASSTHROUGH. So, we don't
+ #need any timers to collect data here, however, add a check
+ #in case ssl behavior changes.
+ if {($ctx(ptcl) eq "http" || $ctx(ptcl) eq "https") && ${len} < 8} {
+  call /Common/sslo_L3_outbound.app/sslo_L3_outbound-lib::log 1 "CLIENTSSL_PASSTHROUGH http insuffient bytes ${len}"
+  reject
+  return
+ }
+
+ # not TLS
+ set ctx(ptcl) [call /Common/sslo_L3_outbound.app/sslo_L3_outbound-lib::csf_ptcl $ctx(ptcl) $said $len]
+ call /Common/sslo_L3_outbound.app/sslo_L3_outbound-lib::log 2 "CLIENTSSL_PASSTHROUGH client spoke first ${len} bytes, not TLS, L7 guess=$ctx(ptcl)"
+
+ #Explicit proxy connection
+ if { $ctx(ptcl) eq "http-connect" } {
+  if { [info exists ctx(httpconn)] } {
+   call /Common/sslo_L3_outbound.app/sslo_L3_outbound-lib::log 1 "CLIENTSSL_PASSTHROUGH Recursive HTTP CONNECT is not supported. Reject."
+   reject
+   return
+  }
+  call /Common/sslo_L3_outbound.app/sslo_L3_outbound-lib::log 2 "CLIENTSSL_PASSTHROUGH Monitoring CONNECT handshake."
+  if {[PROFILE::exists http]} {
+   HTTP::enable
+  }
+  return
+ }
+}
+
+when CLIENTSSL_CLIENTHELLO {
+ #Reset connection idle timer
+ if {[info exists ipIdleTmo]} {
+  IP::idle_timeout $ipIdleTmo
+ }
+
+ if {$ctx(log) > 1} {
+  if {[SSL::extensions exists -type 0]} {
+   binary scan [SSL::extensions -type 0] @9a* SNI
+   if {[regexp {(?i)[^a-z0-9.-]} $SNI]} {
+    call /Common/sslo_L3_outbound.app/sslo_L3_outbound-lib::log 1 "CLIENTSSL_CLIENTHELLO client offered bogus SNI"
+   } else {
+    set ctx(SNI) [string tolower $SNI]
+   }
+  }
+  call /Common/sslo_L3_outbound.app/sslo_L3_outbound-lib::log 2 "CLIENTSSL_CLIENTHELLO client spoke [SSL::cipher version] Client Hello ${len} bytes, SNI='$ctx(SNI)', L7 guess=$ctx(ptcl), pre-HS"
+ }
+
+ SSL::enable serverside
+} ; #CLIENTSSL_CLIENTHELLO
+
+
+when CLIENTSSL_HANDSHAKE {
+ SSL::unclean_shutdown enable
+
+ if {$ctx(log) > 1} {
+  set m [expr {($ctx(SNI) eq "") ? "NO_SNI" : $ctx(SNI)}]
+  append m "-[SSL::cipher version]-[SSL::cipher name]-[SSL::cipher bits]"
+  call /Common/sslo_L3_outbound.app/sslo_L3_outbound-lib::log 2 "CLIENTSSL_HANDSHAKE ${m}"
+ }
+
+ set clientssl_handshake 1
+ if { [info exists serverssl_data_collected] } {
+  peer { SSL::release }
+ }
+
+ SSL::collect
+} ; #CLIENTSSL_HANDSHAKE
+
+
+when CLIENTSSL_DATA {
+ set payload_offset 0
+ set payload_length 25
+ #Get inner protocol
+ set inner_ptcl [call /Common/sslo_L3_outbound.app/sslo_L3_outbound-lib::csf_ptcl $ctx(ptcl) [SSL::payload $payload_offset $payload_length] $payload_length]
+
+ #HTTP CONNECT inside SSL?
+ if { $inner_ptcl eq "http-connect" } {
+  call /Common/sslo_L3_outbound.app/sslo_L3_outbound-lib::log 1 "CLIENTSSL_DATA Detected HTTP CONNECT inside TLS. Reject."
+  reject
+  return
+ }
+
+ if { [info exists ctx(httpconn)] } {
+  # Not enabling HTTP on CONNECT tunnel data
+  HTTP::disable
+ }
+
+ if { [info exists ctx(ssf_ssl)] } {
+  SSL::release
+  return
+ } else {
+  set ctx(csf_ssl) true
+ }
+
+ # If csf_ptcl returns incomplete, then there is insufficient data collected
+ # to determine HTTP method (this could be for example due to split HTTP
+ # requests to prevent BEAST attack). Set a timer to collect more bytes.
+ # If timer expires, then release whatever data we got to process further.
+ if { $inner_ptcl eq "incomplete" } {
+  call /Common/sslo_L3_outbound.app/sslo_L3_outbound-lib::log 2 "CLIENTSSL_DATA ${srcIP}_${srcPort} to ${dstIP}_${dstPort} insufficient decrypted SSL payload, set timer"
+  if { ![info exists rccollecttmr] } {
+   set rccollecttmr [after 1000 {
+    call /Common/sslo_L3_outbound.app/sslo_L3_outbound-lib::log 1 "CLIENTSSL_DATA ${srcIP}_${srcPort} to ${dstIP}_${dstPort} 1234 insufficient decrypted SSL payload, reset L7 ptcl to unknown"
+    set ctx(ptcl) "unknown"
+    unset rccollecttmr
+    event CLIENTSSL_DATA disable ; # prevent more CLIENTSSL_DATA event
+    SSL::release
+   }]
+  }
+  return
+ }
+ if {[info exists rccollecttmr]} {
+  after cancel $rccollecttmr
+  unset rccollecttmr
+ }
+
+ # Update ctx(ptcl) to the inner protocol unless this is http.
+ # For http, update to https
+ if { $inner_ptcl ne "http" } {
+  set ctx(ptcl) $inner_ptcl
+ } else {
+  set ctx(ptcl) "https"
+ }
+
+ event CLIENTSSL_DATA disable ; # prevent more CLIENTSSL_DATA event
+
+ if {$ctx(log) > 1} {
+  call /Common/sslo_L3_outbound.app/sslo_L3_outbound-lib::log 2 "CLIENTSSL_DATA client spoke first within TLS [SSL::payload length] bytes, inner-protocol $inner_ptcl, L7 guess=$ctx(ptcl), post-HS"
+ }
+
+ SSL::release
+} ; #CLIENTSSL_DATA
+
+when SERVERSSL_HANDSHAKE {
+ SSL::unclean_shutdown enable
+ SSL::collect
+} ; #SERVERSSL_HANDSHAKE
+
+when L7CHECK_CLIENT_DATA {
+  L7CHECK::protocol set $ctx(ptcl)
+  if { $ctx(ptcl) eq "http" || $ctx(ptcl) eq "https" } {
+   catch {
+    HTTP::enable
+    CONNECTOR::enable
+   }
+  }
+}
+
+when L7CHECK_SERVER_DATA {
+  L7CHECK::protocol set $ctx(ptcl)
+}
+
+when SERVERSSL_DATA {
+ set payload_offset 0
+ set payload_length 25
+ if { [info exists ctx(csf_ssl)] } {
+  SSL::release
+  return
+ } else {
+  set ctx(ssf_ssl) true
+ }
+
+ set ctx(ptcl) [call /Common/sslo_L3_outbound.app/sslo_L3_outbound-lib::ssf_ptcl $ctx(ptcl) [SSL::payload $payload_offset $payload_length]]
+
+ if {$ctx(ptcl) eq "imap"} {
+  set ctx(ptcl) "imaps"
+ } elseif {$ctx(ptcl) eq "smtp"} {
+  set ctx(ptcl) "smtps"
+ } elseif {$ctx(ptcl) eq "pop3"} {
+  set ctx(ptcl) "pop3s"
+ } elseif {$ctx(ptcl) eq "ftp"} {
+  set ctx(ptcl) "ftps"
+ } elseif {$ctx(ptcl) eq "https"} {
+  set ctx(ptcl) "unknown"
+ }
+
+ if {$ctx(log) > 1} {
+  call /Common/sslo_L3_outbound.app/sslo_L3_outbound-lib::log 2 "SERVERSSL_DATA server spoke first within TLS [SSL::payload length] bytes, L7 guess=$ctx(ptcl)"
+ }
+
+ if { [info exists clientssl_handshake] } {
+  SSL::release
+ } else {
+  set serverssl_data_collected 1
+ }
+} ; #SERVERSSL_DATA
+
+when ACCESS_PER_REQUEST_AGENT_EVENT {
+    switch [ACCESS::perflow get perflow.irule_agent_id] {
+        "sslo_get_category" {
+            call /Common/sslo_L3_outbound.app/sslo_L3_outbound-lib::store_host_header $said
+        }
+        default {
+        }
+    }
+}
+}
+ltm rule /Common/sslo_L3_outbound.app/sslo_L3_outbound-lib {
+    app-service /Common/sslo_L3_outbound.app/sslo_L3_outbound
+# Copyright (c) 2018.  F5 Networks, Inc.  See End User License Agreement (EULA) for license terms.
+# Notwithstanding anything to the contrary in the EULA, Licensee may copy and modify
+# this software product for its internal business purposes. Further, Licensee may upload,
+# publish and distribute the modified version of the software product on devcentral.f5.com.
+
+# emit a log message
+# uses ACCESS::log ssl-orchestrator.[debug|notice|error] $msg to make use of
+# the Common Logging Framework
+proc log {level msg} {
+ if {$msg eq ""} { return }
+
+ if {$level == 0} {
+  ACCESS::log ssl-orchestrator.error "[virtual] $msg"
+ } elseif {$level == 1} {
+  ACCESS::log ssl-orchestrator.notice "[virtual] $msg"
+ } elseif {$level == 2} {
+  ACCESS::log ssl-orchestrator.debug "[virtual] $msg"
+ }
+} ; #proc log
+
+# try to ascertain protocol from first few bytes that server
+# sent. If unrecognized, return value of argument ptcl, else
+# suitable protocol string
+proc ssf_ptcl {ptcl taste} {
+ if {[regexp {^(220 .+ (ESMTP|\*) (OK|NO|BAD) ).*\r\n$} $taste]} {
+  # looks like SMTP (not a complete test)
+  return "smtp"
+ }
+ if {[string first "SSH-2.0-" $taste] == 0} {
+  #looks like SSH
+  return "ssh"
+ }
+ return $ptcl
+} ; #proc ssf_ptcl
+
+
+# try to ascertain protocol from first few bytes that client
+# sent. If unrecognized, return value of argument ptcl, else
+# suitable protocol string.
+#
+# For test against expected http methods, make sure we have enough
+# data "mincollectlen" bytes for comparison to be valid. If not, set
+# ptcl so caller can collect more data. Note that "mincollectlen"
+# is set to 8 which is the longest http method aka "PROPFIND". If we
+# update the expected set of http methods, we need to make sure
+# that "mincollectlen" is updated, as needed.
+proc csf_ptcl {ptcl taste len} {
+ if {[regexp {^([A-Z]+) (?:/|https?://|[A-Za-z\d-]{1,63}[.]|\[[a-fA-F\d:]+\]|(?:[*]\x20))} $taste junk method]} {
+  # looks like HTTP (not a complete test because we are disinclined
+  # to accumulate client data looking for full HTTP request)
+  if { $method eq "CONNECT" } {
+   return "http-connect"
+  }
+  if {([lsearch -exact -sorted {DELETE GET HEAD LOCK
+   OPTIONS PATCH POST PROPFIND PUT TRACE UNLOCK} $method] >= 0)} {
+   return "http"
+  }
+ }
+ if {$ptcl eq "http" || $ptcl eq "https" || $ptcl eq "http-connect"} {
+  if { $len < 8 } {
+   set ptcl "incomplete"
+  } else {
+   set ptcl "unknown"
+  }
+  return $ptcl
+ }
+ if {[string first "SSH-2.0-" $taste] == 0} {
+  #looks like SSH, which is ssf (chuckle) so we shouldn't be here,
+  #but in future after we hear from server we may check on what
+  #client says to better discriminate application protocol (like
+  #if server says SSH-2.0 and client says SSH-1.99 we suspect older
+  #client, maybe vulnerable to protocol downgrade attack)
+  return "ssh"
+ }
+ return $ptcl
+} ; #proc csf_ptcl
+
+proc store_host_header said {
+ if {[regexp {^([A-Z]+) (?:/|https?://|[A-Za-z\d-]{1,63}[.]|\[[a-fA-F\d:]+\]|(?:[*]\x20))} $said junk method] &&
+     ([lsearch -exact -sorted {CONNECT DELETE GET HEAD LOCK OPTIONS PATCH POST PROPFIND PUT TRACE UNLOCK} $method] >= 0)} {
+  set host_hdr [findstr ${said} "Host: " 6 "\r\n"]
+  if { [SSL::mode] == 0 } {
+   set scheme "http://"
+  } else {
+   set scheme "https://"
+  }
+  if { ${host_hdr} ne "" } {
+   set cat_result [CATEGORY::lookup "${scheme}${host_hdr}/" -id custom]
+   set custom "| [join ${cat_result} { | }] |"
+   set scratchpad [lindex ${cat_result} 0]
+   if { ${custom} eq "|  |" } {
+    set custom "| 153 |"
+    set scratchpad "153"
+   }
+   ACCESS::perflow set perflow.custom ${custom}
+   ACCESS::perflow set perflow.scratchpad ${scratchpad}
+ } else {
+   # Empty host header found
+  }
+ } else {
+  # Not HTTP or HTTPS, or unable to parse header.
+ }
+} ; #proc store_host_header
+}
+ltm rule /Common/user-coaching-ja4t-rule {
+###############################################################################################
+#  iRule to calculate JA4 "Client TLS"
+#  See JA4 spec on GitHub for more details
+#  https://github.com/FoxIO-LLC/ja4/blob/main/technical_details/JA4.md
+#
+#  Copyright (c) 2024, FoxIO
+#  All rights reserved.
+#  JA4 TLS Client Fingerprinting is Open-Source, Licensed under BSD 3-Clause
+#  For full license text and more details, see the repo root https://github.com/FoxIO-LLC/ja4
+#
+#  Local update version: 20260209-1
+###############################################################################################
+
+proc parseClientHello { payload rlen ja4_ver ja4_tprt } {
+
+    set ja4_sni "i"
+    ## Define GREASE values so these can be excluded from cipher list
+    set greaseList "0a0a 1a1a 2a2a 3a3a 4a4a 5a5a 6a6a 7a7a 8a8a 9a9a aaaa baba caca dada eaea fafa"
+
+    ## HEADERS - SKIP: Already captured in XXX_DATA event (record header, handshake header, server version, server random)
+    set field_offset 43
+
+    ## SESSION ID - SKIP
+    binary scan ${payload} @${field_offset}c sessID_len
+    set field_offset [expr {${field_offset} + 1 + ${sessID_len}}]
+
+    ## CLIENT CIPHERS
+    ## Capture cipher list length and incr offset
+    binary scan ${payload} @${field_offset}S cipherList_len
+    set field_offset [expr {${field_offset} + 2}]
+
+    set cipher_offset 0
+    set cipher_cnt 0
+    set cipher_list [list]
+    while { [expr {${cipher_offset} < ${cipherList_len}}] } {
+        binary scan ${payload} @${field_offset}H4 cipher_hex
+        if { [lsearch -sorted -inline $greaseList $cipher_hex] eq "" } {
+            lappend cipher_list ${cipher_hex}
+            incr cipher_cnt
+        }
+        set cipher_offset [expr {${cipher_offset} + 2}]
+        set field_offset [expr {${field_offset} + 2}]
+    }
+    ## Sort cipher_list
+    set cipher_list [lsort $cipher_list]
+    ## Convert list to comma-separated string
+    set cipher_str ""
+    foreach cipher_hex $cipher_list {
+        append cipher_str "${cipher_hex},"
+    }
+    set cipher_str [string trimright ${cipher_str} ","]
+    ## Get truncated hash of cipher list string
+    binary scan [sha256 ${cipher_str}] H* cipher_hash
+    set trunc_cipher_hash [string range $cipher_hash 0 11]
+
+    ## Format cipher count
+    if { $cipher_cnt > 99 } {
+        set cipher_cnt 99
+    }
+    set ja4_ccnt [format "%02d" $cipher_cnt]
+
+    ## COMPRESSION METHOD - SKIP
+    binary scan ${payload} @${field_offset}c compression_len
+    set field_offset [expr {${field_offset} + 1 + ${compression_len}}]
+
+
+    ## EXTENSIONS 
+    set ja4_ecnt 0
+    set ja4_etype_list [list]
+    set ja4_alpn "00"
+    set siga_list ""
+
+    ## Check if there is more data
+    if { [expr {${field_offset} < ${rlen}}] } {
+        ## Capture Extensions length and incr offset
+        binary scan ${payload} @${field_offset}S extList_len
+        set field_offset [expr {${field_offset} + 2}]
+
+        ## Pad rlen by 1 byte
+        set rlen [expr ${rlen} + 1]
+
+        ## Parse Extensions
+        while { [expr {${field_offset} <= ${rlen}}] } {
+            ## Capture Ext Type, Incr offset past Ext Type
+            binary scan ${payload} @${field_offset}H4 ext_hex
+            set field_offset [expr {${field_offset} + 2}]
+
+            ## Capture Ext Length, Incr offset past Ext Length
+            binary scan ${payload} @${field_offset}S ext_len
+            set field_offset [expr {${field_offset} + 2}]
+
+            ## Check for GREASE values, if GREASE incr offset by Ext Length
+            if {[lsearch -sorted -inline $greaseList $ext_hex] ne "" } {
+                set field_offset [expr {${field_offset} + ${ext_len}}]
+                continue
+            } else {
+                ## Check for specific Extension Types
+                switch $ext_hex {
+                    "0000" {
+                        ## SNI (00)
+                        ## Set JA4 domain/ip field
+                        set ja4_sni "d"
+                        incr ja4_ecnt
+                    }
+                    "000d" {
+                        ## Signature Algorithms (13)
+                        ## Capture Signature Algorithms length
+                        binary scan ${payload} @${field_offset}S siga_len
+                        set siga_offset 0
+                        while { [expr {${siga_offset} < ${siga_len}}] } {
+                            binary scan ${payload} @[expr {${field_offset} + 2 + ${siga_offset}}]H4 siga_hex
+                            if { [lsearch -sorted -inline $greaseList $siga_hex] eq "" } {
+                                append siga_list "${siga_hex},"
+                            }
+                            incr siga_offset 2
+                        }
+                        set siga_list [string trimright ${siga_list} ","]
+                        lappend ja4_etype_list ${ext_hex}
+                        incr ja4_ecnt
+
+                    }
+                    "0010" {
+                        ## ALPN (16)
+                        ## Capture APLN length and First ALPN string length
+                        binary scan ${payload} @${field_offset}Sc alpn_len alpn_str_len
+                        ## Capture the First APLN string value
+                        binary scan ${payload} @[expr {${field_offset} + 3}]a${alpn_str_len} alpn_str
+                        incr ja4_ecnt
+                    }
+                    "0027" {
+                        ## Supported EKT Ciphers (39)
+                        ## Set JA4 Transport Protocol as QUIC
+                        set ja4_tprt "q"
+                        lappend ja4_etype_list ${ext_hex}
+                        incr ja4_ecnt
+                    }
+                    "002b" {
+                        ## Supported Versions (43)
+                        ## Capture Supported Versions length
+                        binary scan ${payload} @${field_offset}c sver_len
+                        set sver_offset 0
+                        set sver_list [list]
+                        while { [expr {${sver_offset} < ${sver_len}}] } {
+                            binary scan ${payload} @[expr {${field_offset} + 1 + ${sver_offset}}]H4 sver_hex
+                            if { [lsearch -sorted -inline $greaseList $sver_hex] eq "" } {
+                                lappend sver_list ${sver_hex}
+                            }
+                            incr sver_offset 2
+                        }
+                        set sver_list [lsort $sver_list]
+                        set ja4_ver [lindex $sver_list end]
+                        lappend ja4_etype_list ${ext_hex}
+                        incr ja4_ecnt
+                    } default {
+                        lappend ja4_etype_list ${ext_hex}
+                        incr ja4_ecnt
+                    }
+                }
+
+                ## Incr offset past the extension data length. Repeat this loop until we reach rlen (the end of the payload)
+                set field_offset [expr {${field_offset} + ${ext_len}}]
+            }
+        }
+    }
+    ## Set JA4 ALPN value
+    if { [info exist alpn_str] } {
+        set ja4_alpn "[string index ${alpn_str} 0][string index ${alpn_str} end]"
+    }
+
+    ## Format extensions count var
+    if { $ja4_ecnt > 99 } {
+        set ja4_ecnt 99
+    }
+    set ja4_ecnt [format "%02d" $ja4_ecnt]
+
+    ## Sort and format extensions type list
+    set ja4_etype_list [lsort $ja4_etype_list]
+    set ja4_etype_str ""
+    foreach ext_type_hex $ja4_etype_list {
+        append ja4_etype_str "${ext_type_hex},"
+    }
+    set ja4_etype_str [string trimright ${ja4_etype_str} ","]
+    ## If present, append signature algorithms list to extensions list
+    if { ${siga_list} ne ""} {
+        set ja4_etype_str "${ja4_etype_str}_${siga_list}"
+    }
+    ## Hash extensions list
+    binary scan [sha256 ${ja4_etype_str}] H* ja4_ext_hash
+    set ja4_ext_hash_trunc [string range ${ja4_ext_hash} 0 11]
+
+    ## Format version
+    switch $ja4_ver {
+        0304 { set ja4_ver "13" }
+        0303 { set ja4_ver "12" }
+        0302 { set ja4_ver "11" }
+        0301 { set ja4_ver "10" }
+        0300 { set ja4_ver "s3" }
+        0200 { set ja4_ver "s2" }
+        0100 { set ja4_ver "s1" }
+    }
+
+    ##Build JA4 string
+    set ja4_str "${ja4_tprt}${ja4_ver}${ja4_sni}${ja4_ccnt}${ja4_ecnt}${ja4_alpn}_${trunc_cipher_hash}_${ja4_ext_hash_trunc}"
+    set ja4_r_str "${ja4_tprt}${ja4_ver}${ja4_sni}${ja4_ccnt}${ja4_ecnt}${ja4_alpn}_${cipher_str}_${ja4_etype_str}"
+
+    return "${ja4_str}"
+}
+
+
+when CLIENT_ACCEPTED priority 40 {
+    unset -nocomplain rlen
+    set ja4_tprt "t"
+    ## Collect the TCP payload
+    #TCP::collect
+}
+
+when CLIENT_DATA priority 40 {
+    ## Get the TLS packet type and versions
+    if { ! [info exists rlen] } {
+        binary scan [TCP::payload] cH4ScH6H4 rtype proto_ver rlen hs_type rilen server_ver
+        catch {
+            #log local0. "rtype ${rtype} proto_ver ${proto_ver} rlen ${rlen} hs_type ${hs_type} rilen ${rilen} server_ver ${server_ver}"
+
+            if { ( ${rtype} == 22 ) and ( ${hs_type} == 1 ) } {
+                #log local0. "Found CLIENT_HELLO"
+                set ja4 [call parseClientHello [TCP::payload] ${rlen} ${server_ver} ${ja4_tprt}]
+                set ctx(ja4) ${ja4}
+            }
+        }
+    } else {
+        # Collect the rest of the record if necessary
+        if { [TCP::payload length] < $rlen } {
+            TCP::collect $rlen
+        }
+    }
+
+    ## Release the payload
+    #TCP::release
+}
+}
+ltm rule /Common/user-coaching-rule {
+## SSL Orchestrator Service Extension - User Coaching
+## Version: 4.0
+# Version: 20260617-1
+## Author: Kevin Stewart, F5 Networks
+
+when RULE_INIT {
+    ## ===========================================
+    ## BLOCKING CATEGORIES: Use this array to include any URL categories to trigger a blocking event.
+    ## Note that blocking matches take precedence over coaching matches.
+    ## Use the following TMSH command on BIG-IP to find the list of
+    ## subscription categories:
+    ##   tmsh list sys url-db url-category |grep "sys url-db url-category " |awk -F" " '{print $4}'
+    ## ===========================================
+    set static::BLOCKING_CATEGORIES {
+        "/Common/Uncategorized"
+        "/Common/Unknown"
+    }
+
+    ## ===========================================
+    ## COACHING CATEGORIES: Use this array to include any URL categories to trigger a user coaching event. 
+    ## Use the following TMSH command on BIG-IP to find the list of
+    ## subscription categories:
+    ##   tmsh list sys url-db url-category |grep "sys url-db url-category " |awk -F" " '{print $4}'
+    ## ===========================================
+    set static::COACHING_CATEGORIES {
+        "/Common/Generative_AI"
+        "/Common/Generative_AI_-_Text_and_Code"
+        "/Common/Generative_AI_-_Conversation"
+        "/Common/Generative_AI_-_Multimedia"
+        "/Common/Other_AI_ML_Applications"
+    }
+
+    ## ===========================================
+    ## CATEGORY TYPE: Use this option to indicate the type of category to use ("subscription", "custom_only", or "sub_and_custom").
+    ## ===========================================
+    # set static::CATEGORY_TYPE "subscription"
+    set static::CATEGORY_TYPE "custom_only"
+
+    ## ===========================================
+    ## IDENTIFIER TYPE: Use this option to indicate the type of identifier to use ("ja4" or "cookie").
+    ## The JA4 method creates a local session table of unique identies and requires a JA4 TLS iRule on the -in-t-4/6 interceptoion rule VIP to perform a client TLS fingerprint.
+    ## The cookie method inserts a domain cookie to the client.
+    ## ===========================================
+    set static::IDENTIFIER_TYPE "cookie"
+    # set static::IDENTIFIER_TYPE "ja4"
+
+    ## ===========================================
+    ## COOKIE IDENT: Create an AES128 key and an arbitrary string here that will be encrypted into the cookie value (for validation) -- if the "cookie" IDENTIFIER_TYPE is used
+    ## If COOKIE_KEY contains an AES key string, the cookie value (COOKIE_IDENT) will transmit encrypted using this key
+    ## If COOKIE_KEY is left empty, the cookie value (COOKIE_IDENT) will transmit unencrypted
+    ## Ref: https://clouddocs.f5.com/api/irules/AES.html for details on creating an AES key string
+    ## ===========================================
+    # set static::COOKIE_KEY "AES 128 b55c4753cba6adaa0e4ea7640504d9b4"
+    set static::COOKIE_KEY ""
+    set static::COOKIE_IDENT "true"
+
+    ## ===========================================
+    ## SESSION TIMER: Use this value to define the JA4 session timeout value for the user session table entry (in seconds) -- default 3600 seconds
+    ## ===========================================
+    set static::JA4_SESSION_TIMER 3600
+
+    ## ===========================================
+    ## BLOCKING MESSAGE: Use this string to indicate the message that will appear on the blocking page.
+    ## The "THISHOST" variable is replaced at runtime with the actual HTTP Host value.
+    ## ===========================================
+    set static::BLOCKING_MESSAGE {
+        You appear to be requesting a site <b>(THISHOST)</b> that is expressly prohibited via corporate policy. This request has been logged.
+    }
+
+    ## ===========================================
+    ## COACHING MESSAGE: Use this string to indicate the message that will appear on the coaching page.
+    ## The "THISHOST" variable is replaced at runtime with the actual HTTP Host value.
+    ## ===========================================
+    set static::COACHING_MESSAGE {
+        You appear to be requesting a site <b>(THISHOST)</b> that may expose sensitive information to a third party. By accessing this site you consent to additional enterprise security controls. This request will be logged.
+    }
+
+    ## ===========================================
+    ## REQUIRE JUSTIFICATION: Use this Boolean to require a justification in the coaching page.
+    ## ===========================================
+    set static::REQUIRE_JUSTIFICATION 0
+
+    ## ===========================================
+    ## LOG ENABLED: Use this Boolean option to enable/disable logging of coaching page access
+    ## ===========================================
+    set static::LOG_ENABLED 1
+
+    ## ===========================================
+    ## LOG POOL: Use this to indicate a remote HSL logging pool. Logging (LOG_ENABLED) must be enabled (1)
+    ## ===========================================
+    # set static::LOG_POOL "/Common/my_syslog_pool"
+    set static::LOG_POOL ""
+
+    ## ===========================================
+    ## EXCLUSION LIST: Use this array to list any file types to exclude from coaching (entry format: file-extension  file-type)
+    ##
+    ##  These are typically objects referenced internally from a web document where the request would not expose a
+    ##  a way to handle to the user coaching response (ex. request for a .jpg image referenced in the page document).
+    ##  If the referenced object lives inside the same domain as the requested site, the domain cookie or ja4 fingerprint 
+    ##  would normally prevent a coaching response. However, if a referenced object is outside the requested site, neither 
+    ##  domain cookie nor ja4 fingerprint would prevent the coaching response. This array bypasses the coaching response
+    ##  for the set of requested file extensions.
+    ##
+    ##  Entry format: extension     arbitrary string value (no spaces)
+    ##      ex. jpeg    image
+    ##
+    ##      jpeg is the file extension "array key" (i.e., .jpeg), and "image" is the arbitrary string "array value"`
+    ## ===========================================
+    array set static::EXCLUDE_FILETYPES {
+        jpg         image
+        jpeg        image
+        jfif        image
+        pjpeg       image
+        pjp         image
+        png         image
+        apng        image
+        avif        image
+        gif         image
+        svg         image
+        bmp         image
+        webp        image
+        heif        image
+        heifs       image
+        heic        image
+        js          script
+        mjs         script
+        cjs         script
+        ts          script
+        wasm        binary
+        woff        font
+        woff2       font
+        ttf         font
+        otf         font
+        eot         font
+        tiff        image
+        mp3         media
+        mp4         media
+        m4a         media
+        mpg         media
+        mpeg        media
+        mov         media
+        avi         media
+        webm        media
+        3gp         media
+        aac         media
+        flac        media
+        ogg         media
+        oga         media
+        wav         media
+        json        data
+        xml         data
+        map         data
+        csv         data
+        txt         data
+        bin         data
+        data        data
+        gz          compressed
+        br          compressed
+        zst         compressed
+        css         stylesheet
+        ico         icon
+        cur         icon
+        manifest    pwa
+        webmanifest pwa
+    }
+}
+
+
+## Function JUSTIFICATION: Sends error/log messages to local0 (/var/log/ltm) or a defined HSL pool
+proc JUSTIFICATION { msg host hsl } {
+    ## Set up message content
+    set timestr [clock format [clock seconds] -format "%Y-%m-%d %H:%M:%S"]
+    set usermsg "ALERT-COACHING-TRIGGER::${timestr}::client=[IP::client_addr]::host=${host}::${msg}"
+
+    ## Set up log output
+    if { $hsl ne "" } {
+        ## Log to defined HSL pool
+        HSL::send ${hsl} "<134>1 [clock format [clock seconds] -gmt 1 -format {%Y-%m-%dT%H:%M:%S.000Z}] $static::tcl_platform(machine) sslo - [TMM::cmp_count] - ${usermsg}"
+    } else {
+        ## Log to local syslog
+        log -noname local0. $usermsg
+    }
+}
+
+## Function HANDLER_RESPONSE: Issues a 302 redirect back to origin URL when request is to /f5_handler_coaching, 
+##  and handles cookie or ja4 identifier persistence
+proc HANDLER_RESPONSE { identifier hsl } {
+    ## Get ctx shared variable from SSLO (stores JA4 fingerprint)
+    sharedvar ctx
+
+    ## Set persistence based on ja4 fingerprint or domain cookie
+    if { ${identifier} eq "cookie" } {
+        ## The cookie option manages state with a domain cookie sent to the client (optionally encrypted)
+        # set redir [b64decode [URI::decode [lindex [split [HTTP::query] "="] 1]]]
+        set encoded_uri [string range [HTTP::query] [expr { [string first "=" [HTTP::query]] + 1 }] end]
+        if { $encoded_uri eq "" } {
+            HTTP::respond 400 content "Bad Request: missing uri parameter"
+            return
+        }
+        set redir [b64decode [URI::decode $encoded_uri]]
+
+        if { [catch {
+            if { $static::COOKIE_KEY ne "" } {
+                set cookie_val [b64encode [AES::encrypt ${static::COOKIE_KEY} ${static::COOKIE_IDENT}]]
+            } else { 
+                set cookie_val ${static::COOKIE_IDENT}
+            }
+        } err] } {    
+            set cookie_val ${static::COOKIE_IDENT}
+        }
+        set cookie_hdr [format "%s=%s; path=/; domain=%s" "f5se_coaching" "${cookie_val}" "[domain [HTTP::host] 2]"]
+
+        if { $static::LOG_ENABLED } { call JUSTIFICATION "User agreed - redirecting to: ${redir}" [HTTP::host] ${hsl} }
+
+        HTTP::respond 302 Location "https://${redir}" "Set-Cookie" ${cookie_hdr}
+
+    } elseif { ${identifier} eq "ja4" } {
+        ## The JA4 option manages state with a local session table containing the JA4+ TLS fingerprint of the client
+        if { ! [info exists ctx(ja4)] } {
+            log local0. "USER COACHING ERROR: ja4 set but ctx(ja4) does not exist. The ja4 iRule may be missing"
+            return
+        }
+        table set "[IP::client_addr]_[domain [HTTP::host] 2]_${ctx(ja4)}" 1 ${static::JA4_SESSION_TIMER} indef
+        set redir [b64decode [URI::decode [lindex [split [HTTP::query] "="] 1]]]
+        HTTP::respond 302 Location "https://${redir}"
+    }
+}
+
+when CLIENT_ACCEPTED {
+    ## Get ctx shared variable from SSLO (stores JA4 fingerprint)
+    sharedvar ctx
+
+    ## Set hsl value
+    if { ($static::LOG_ENABLED) && ($static::LOG_POOL ne "") } {
+        set hsl [HSL::open -proto UDP -pool $static::LOG_POOL]
+    } else {
+        set hsl ""
+    }
+}
+
+when HTTP_REQUEST priority 10 {
+
+    ## -------------------------------------------------------------------
+    ## Setup. Set category lookup type (or set default)
+    ## -------------------------------------------------------------------
+    switch $static::CATEGORY_TYPE {
+        "subscription" { set query_type "request_default" }
+        "custom_only" { set query_type "custom"}
+        "sub_and_custom" { set query_type "request_default_and_custom" }
+        default { set query_type "custom" }
+    }
+
+    ## -------------------------------------------------------------------
+    ## Setup. Set identifier type (or set default)
+    ## -------------------------------------------------------------------
+    switch $static::IDENTIFIER_TYPE {
+        "ja4" { set identifier "ja4" }
+        "cookie" { set identifier "cookie" }
+        default { set identifier "cookie" }
+    }
+
+    ## -------------------------------------------------------------------
+    ## Setup. Perform a single category lookup (and test for URLDB errors)
+    ## -------------------------------------------------------------------
+    if { [catch {
+        set cat [CATEGORY::lookup "https://[HTTP::host]/" ${query_type} -ip [IP::local_addr]]
+    } err] } {
+        log local0. "USER COACHING ERROR: $err"
+        log local0. "https://[HTTP::host]/"
+        return
+    }
+
+    ## Evaluate request conditions...
+
+    ## -------------------------------------------------------------------
+    ## 1. Serve the coaching handler when the browser returns to /f5_se_coaching
+    ## -------------------------------------------------------------------
+    if { [HTTP::uri] starts_with "/f5_handler_coaching" } {
+        switch -glob [HTTP::query] {
+            "uri=*" {
+                if { [HTTP::method] eq "POST" } { 
+                    HTTP::collect [HTTP::payload length]
+                } else { 
+                    call HANDLER_RESPONSE $identifier $hsl
+                }
+            }
+            default {
+                HTTP::respond 400 content "Bad Request"
+            }
+        }
+        return
+    }
+
+    ## -------------------------------------------------------------------
+    ## 2. Bypass coaching for requests that cannot display an HTML interstitial:
+    ##    - OPTIONS (CORS preflight): browser sends this before the real request
+    ##    - Sec-Fetch-Mode: cors / no-cors: cross-origin XHR / fetch() calls
+    ##    - Sec-Fetch-Dest: empty: any fetch()/XMLHttpRequest (no document target)
+    ##    Serving an HTML page to any of these causes CORS / API failures.
+    ## -------------------------------------------------------------------
+    if { [HTTP::method] eq "OPTIONS" } {
+        return
+    }
+    set sfm [string tolower [HTTP::header "Sec-Fetch-Mode"]]
+    if { ($sfm eq "cors") || ($sfm eq "no-cors") } {
+        return
+    }
+    if { [string tolower [HTTP::header "Sec-Fetch-Dest"]] eq "empty" } {
+        return
+    }
+
+    ## -------------------------------------------------------------------
+    ## 3a. If the client already holds a valid coaching cookie, pass through.
+    ## -------------------------------------------------------------------
+    if { (${identifier} eq "cookie") && ([HTTP::cookie exists f5se_coaching]) } {
+        set tracker ""
+        if { [catch {
+            if { $static::COOKIE_KEY ne "" } {
+                set tracker [AES::decrypt $static::COOKIE_KEY [b64decode [HTTP::cookie f5se_coaching]]]
+            } else {
+                set tracker [HTTP::cookie f5se_coaching]
+            }
+        } err] } {
+            set tracker [HTTP::cookie f5se_coaching]
+        }
+        if { $tracker eq $static::COOKIE_IDENT } {
+            return
+        }
+    }
+
+    ## -------------------------------------------------------------------
+    ## 3b. If the client already holds a valid ja4 token, pass through.
+    ## -------------------------------------------------------------------
+    if { (${identifier} eq "ja4") } {
+        if { ! [info exists ctx(ja4)] } {
+            log local0. "USER COACHING ERROR: ja4 set but ctx(ja4) does not exist. The ja4 iRule may be missing"
+            return
+        }
+        if { ($ctx(ja4) ne "") && (([info exists ctx(ptcl)]) && ($ctx(ptcl) eq "https")) && ([table lookup "[IP::client_addr]_[domain [HTTP::host] 2]_${ctx(ja4)}"] == 1) } {
+            return
+        }
+    }
+
+    ## -------------------------------------------------------------------
+    ## 4. Bypass coaching for embedded resource types (images, scripts, etc.)
+    ##    These cannot display an interstitial HTML page.
+    ## -------------------------------------------------------------------
+    set base [URI::basename [HTTP::uri]]
+    ## Strip query/fragment if URI::basename left any behind
+    set base [string range $base 0 [expr { [string first "@" $base] - 1 }]]
+    if { $base eq "" } { set base [URI::basename [HTTP::uri]] }
+
+    set last_dot [string last "." $base]
+    if { $last_dot != -1 } {
+        set ext [string range $base [expr { $last_dot + 1 }] end]
+        if { [catch { set _ $static::EXCLUDE_FILETYPES($ext) }] == 0 } {
+            ## Extension matched: let the request pass without coaching
+            return
+        }
+    }
+
+    ## -------------------------------------------------------------------
+    ## 5. Return blocking response if request matches blocking categories
+    ## -------------------------------------------------------------------
+    if { ([lsearch -exact $static::BLOCKING_CATEGORIES [getfield ${cat} " " 1]] >= 0) } {
+        set receive_msg [string map [list "THISHOST" "[HTTP::host]"] $static::BLOCKING_MESSAGE]
+        if { $static::LOG_ENABLED } { call JUSTIFICATION "Request Blocked" [HTTP::host] ${hsl} }
+        HTTP::respond 200 content  [subst -nocommands -nobackslashes [ifile get user-blocking-html]] "Connection" "close"
+        return
+    }
+
+    ## -------------------------------------------------------------------
+    ## 6. Return coaching response if all above tests pass
+    ## -------------------------------------------------------------------
+    if { ([lsearch -exact $static::COACHING_CATEGORIES [getfield ${cat} " " 1]] >= 0) } {
+        set receive_host [HTTP::host]
+        set receive_uri [URI::encode [b64encode [HTTP::host][HTTP::uri]]]
+        set receive_msg [string map [list "THISHOST" "[domain [HTTP::host] 2]"] $static::COACHING_MESSAGE]
+        if { $static::REQUIRE_JUSTIFICATION } { set receive_justify "enabled" } else { set receive_justify "" }
+        HTTP::respond 200 content \
+            [subst -nocommands -nobackslashes [ifile get user-coaching-html]] \
+            "Content-Type" "text/html; charset=UTF-8" \
+            "Cache-Control" "no-store, no-cache, must-revalidate" \
+            "Pragma" "no-cache" \
+            "Connection" "close"
+    }
+}
+
+## COACHING return handler
+when HTTP_REQUEST_DATA {
+    if { [HTTP::uri] starts_with "/f5_handler_coaching" } {
+        call HANDLER_RESPONSE $identifier $hsl
+    }
+}
+}
+ltm virtual /Common/juice_vs {
+    creation-time 2026-11-12:10:51:16
+    destination /Common/10.10.100.20:80
+    ip-protocol tcp
+    last-modified-time 2026-11-12:10:51:16
+    mask 255.255.255.255
+    pool /Common/juice_pool
+    profiles {
+        /Common/tcp { }
+    }
+    serverssl-use-sni disabled
+    source 0.0.0.0/0
+    source-address-translation {
+        type automap
+    }
+    translate-address enabled
+    translate-port enabled
+}
+ltm virtual /Common/ssloS_F5_UC.app/ssloS_F5_UC-t-4 {
+    app-service /Common/ssloS_F5_UC.app/ssloS_F5_UC
+    creation-time 2026-11-13:07:22:12
+    description "Type: f5-sslo-user-coaching (2026-11-13 07:22:02)"
+    destination /Common/0.0.0.0%0:0
+    internal
+    ip-protocol tcp
+    last-modified-time 2026-11-13:07:22:20
+    mask any
+    profiles {
+        /Common/http { }
+        /Common/ssloS_F5_UC.app/ssloS_F5_UC-service { }
+        /Common/ssloS_F5_UC.app/ssloS_F5_UC-tcp-lan {
+            context clientside
+        }
+        /Common/ssloS_F5_UC.app/ssloS_F5_UC-tcp-wan {
+            context serverside
+        }
+    }
+    rules {
+        /Common/user-coaching-rule
+    }
+    serverssl-use-sni disabled
+    source 0.0.0.0/0
+    source-address-translation {
+        type automap
+    }
+    translate-address disabled
+    translate-port disabled
+    vlans-enabled
+}
+ltm virtual /Common/sslo_L3_outbound.app/sslo_L3_outbound-in-t-4 {
+    app-service /Common/sslo_L3_outbound.app/sslo_L3_outbound
+    creation-time 2026-11-12:13:01:38
+    description "transparent proxy (2026-11-12 13:01:25)"
+    destination /Common/0.0.0.0%0:0
+    ip-protocol tcp
+    last-modified-time 2026-11-12:13:01:38
+    mask any
+    per-flow-request-access-policy /Common/ssloP_L3_outbound.app/ssloP_L3_outbound_per_req_policy
+    profiles {
+        /Common/f5-tcp-wan {
+            context serverside
+        }
+        /Common/ssloT_L3_outbound.app/ssloT_L3_outbound-cssl {
+            context clientside
+        }
+        /Common/ssloT_L3_outbound.app/ssloT_L3_outbound-sssl {
+            context serverside
+        }
+        /Common/sslo_L3_outbound.app/sslo_L3_outbound-http { }
+        /Common/sslo_L3_outbound.app/sslo_L3_outbound-http-proxy-connect { }
+        /Common/sslo_L3_outbound.app/sslo_L3_outbound-tcp-lan {
+            context clientside
+        }
+        /Common/sslo_L3_outbound.app/sslo_L3_outbound_accessProfile { }
+    }
+    rules {
+        /Common/sslo_L3_outbound.app/sslo_L3_outbound-in_t
+        /Common/sslo_L3_outbound.app/sslo_L3_outbound-lib
+    }
+    serverssl-use-sni disabled
+    source 0.0.0.0/0
+    source-address-translation {
+        type automap
+    }
+    translate-address disabled
+    translate-port disabled
+    vlans {
+        /Common/internal
+    }
+    vlans-enabled
+}
+ltm virtual /Common/webserver_vs {
+    creation-time 2026-11-12:10:51:16
+    destination /Common/10.10.100.10:80
+    ip-protocol tcp
+    last-modified-time 2026-11-12:10:51:16
+    mask 255.255.255.255
+    pool /Common/webserver_pool
+    profiles {
+        /Common/tcp { }
+    }
+    serverssl-use-sni disabled
+    source 0.0.0.0/0
+    source-address-translation {
+        type automap
+    }
+    translate-address enabled
+    translate-port enabled
+}
+ltm virtual-address /Common/0.0.0.0%0 {
+    address any
+    arp disabled
+    icmp-echo disabled
+    mask any
+    traffic-group /Common/traffic-group-1
+}
+ltm virtual-address /Common/10.10.100.10 {
+    address 10.10.100.10
+    arp enabled
+    icmp-echo enabled
+    mask 255.255.255.255
+    traffic-group /Common/traffic-group-1
+}
+ltm virtual-address /Common/10.10.100.20 {
+    address 10.10.100.20
+    arp enabled
+    icmp-echo enabled
+    mask 255.255.255.255
+    traffic-group /Common/traffic-group-1
+}
+ltm classification auto-update settings {
+    auto-update-interval weekly
+    enabled no
+}
+ltm profile client-ssl /Common/sslo-default-clientssl {
+    app-service /Common/ssloGS_global.app/ssloGS_global
+    cert-key-chain {
+        default {
+            cert /Common/default.crt
+            key /Common/default.key
+        }
+    }
+    defaults-from /Common/clientssl
+    inherit-ca-certkeychain true
+    inherit-certkeychain true
+}
+ltm profile client-ssl /Common/ssloT_L3_outbound.app/ssloT_L3_outbound-cssl {
+    allow-non-ssl enabled
+    app-service /Common/ssloT_L3_outbound.app/ssloT_L3_outbound
+    cert-extension-includes { basic-constraints extended-key-usage subject-alternative-name }
+    cert-key-chain {
+        CA_CERT_KEY_CHAIN_0 {
+            app-service /Common/ssloT_L3_outbound.app/ssloT_L3_outbound
+            cert /Common/ca-f5trn-com
+            key /Common/ca-f5trn-com
+            usage CA
+        }
+        CERT_KEY_CHAIN_0 {
+            app-service /Common/ssloT_L3_outbound.app/ssloT_L3_outbound
+            cert /Common/default.crt
+            key /Common/default.key
+        }
+    }
+    cipher-group none
+    ciphers DEFAULT
+    defaults-from /Common/sslo-default-clientssl
+    forward-proxy-bypass-default-action intercept
+    hello-extension-includes none
+    inherit-ca-certkeychain false
+    inherit-certkeychain false
+    log-publisher /Common/sys-ssl-publisher
+    options { dont-insert-empty-fragments no-tlsv1.3 }
+    server-name none
+    sni-default false
+    ssl-c3d disabled
+    ssl-forward-proxy enabled
+    ssl-forward-proxy-bypass enabled
+    ssl-forward-proxy-verified-handshake enabled
+    unclean-shutdown disabled
+}
+ltm profile connector /Common/ssloS_F5_UC.app/ssloS_F5_UC-t-4-connector {
+    app-service /Common/ssloS_F5_UC.app/ssloS_F5_UC
+    connect-on-data disabled
+    connection-timeout 0
+    entry-virtual-server /Common/ssloS_F5_UC.app/ssloS_F5_UC-t-4
+}
+ltm profile fastl4 /Common/sslo-default-fastL4 {
+    app-service /Common/ssloGS_global.app/ssloGS_global
+    defaults-from /Common/fastL4
+}
+ltm profile ftp /Common/sslo-default-ftp {
+    app-service /Common/ssloGS_global.app/ssloGS_global
+    defaults-from /Common/ftp
+}
+ltm profile http /Common/sslo-default-http {
+    app-service /Common/ssloGS_global.app/ssloGS_global
+    defaults-from /Common/http
+}
+ltm profile http /Common/sslo-default-http-explicit {
+    app-service /Common/ssloGS_global.app/ssloGS_global
+    defaults-from /Common/http-explicit
+    explicit-proxy {
+        dns-resolver /Common/sslo-default-http-explicit-profile-dns-resolver
+    }
+}
+ltm profile http /Common/sslo_L3_outbound.app/sslo_L3_outbound-http {
+    app-service /Common/sslo_L3_outbound.app/sslo_L3_outbound
+    defaults-from /Common/sslo-default-http
+    enforcement {
+        max-header-count 128
+        max-header-size 65536
+        max-requests 0
+    }
+}
+ltm profile http-proxy-connect /Common/sslo-default-http-proxy-connect {
+    app-service /Common/ssloGS_global.app/ssloGS_global
+    defaults-from /Common/http-proxy-connect
+}
+ltm profile http-proxy-connect /Common/sslo_L3_outbound.app/sslo_L3_outbound-http-proxy-connect {
+    app-service /Common/sslo_L3_outbound.app/sslo_L3_outbound
+    default-state disabled
+    defaults-from /Common/sslo-default-http-proxy-connect
+}
+ltm profile icap /Common/sslo-default-icap {
+    app-service /Common/ssloGS_global.app/ssloGS_global
+    defaults-from /Common/icap
+}
+ltm profile imap /Common/sslo-default-imap {
+    app-service /Common/ssloGS_global.app/ssloGS_global
+    defaults-from /Common/imap
+}
+ltm profile ocsp /Common/sslo-default-ocsp {
+    app-service /Common/ssloGS_global.app/ssloGS_global
+    defaults-from /Common/ocsp
+}
+ltm profile one-connect /Common/sslo-default-oneconnect {
+    app-service /Common/ssloGS_global.app/ssloGS_global
+    defaults-from /Common/oneconnect
+}
+ltm profile pop3 /Common/sslo-default-pop3 {
+    app-service /Common/ssloGS_global.app/ssloGS_global
+    defaults-from /Common/pop3
+}
+ltm profile request-adapt /Common/sslo-default-requestadapt {
+    app-service /Common/ssloGS_global.app/ssloGS_global
+    defaults-from /Common/requestadapt
+}
+ltm profile response-adapt /Common/sslo-default-responseadapt {
+    app-service /Common/ssloGS_global.app/ssloGS_global
+    defaults-from /Common/responseadapt
+}
+ltm profile server-ssl /Common/sslo-default-serverssl {
+    app-service /Common/ssloGS_global.app/ssloGS_global
+    defaults-from /Common/serverssl
+}
+ltm profile server-ssl /Common/ssloT_L3_outbound.app/ssloT_L3_outbound-sssl {
+    app-service /Common/ssloT_L3_outbound.app/ssloT_L3_outbound
+    bypass-on-client-cert-fail disabled
+    bypass-on-handshake-alert disabled
+    ca-file /Common/ca-bundle.crt
+    cipher-group none
+    ciphers DEFAULT
+    crl none
+    defaults-from /Common/sslo-default-serverssl
+    expire-cert-response-control drop
+    log-publisher /Common/sys-ssl-publisher
+    ocsp none
+    options { dont-insert-empty-fragments no-tlsv1.3 }
+    peer-cert-mode require
+    revoked-cert-status-response-control ignore
+    secure-renegotiation request
+    server-name none
+    sni-default false
+    ssl-c3d disabled
+    ssl-forward-proxy enabled
+    ssl-forward-proxy-bypass enabled
+    ssl-forward-proxy-verified-handshake enabled
+    unclean-shutdown disabled
+    untrusted-cert-response-control drop
+}
+ltm profile service /Common/ssloS_F5_UC.app/ssloS_F5_UC-service {
+    app-service /Common/ssloS_F5_UC.app/ssloS_F5_UC
+    type f5-module
+}
+ltm profile smtps /Common/sslo-default-smtps {
+    app-service /Common/ssloGS_global.app/ssloGS_global
+    defaults-from /Common/smtps
+}
+ltm profile tcp /Common/sslo-default-tcp-lan {
+    app-service /Common/ssloGS_global.app/ssloGS_global
+    defaults-from /Common/f5-tcp-lan
+}
+ltm profile tcp /Common/sslo-default-tcp-wan {
+    app-service /Common/ssloGS_global.app/ssloGS_global
+    defaults-from /Common/f5-tcp-wan
+}
+ltm profile tcp /Common/ssloS_F5_UC.app/ssloS_F5_UC-tcp-lan {
+    app-service /Common/ssloS_F5_UC.app/ssloS_F5_UC
+    defaults-from /Common/sslo-default-tcp-lan
+    description "Type: f5-sslo-user-coaching (2026-11-13 07:22:02)"
+    nagle disabled
+    slow-start disabled
+}
+ltm profile tcp /Common/ssloS_F5_UC.app/ssloS_F5_UC-tcp-wan {
+    app-service /Common/ssloS_F5_UC.app/ssloS_F5_UC
+    defaults-from /Common/sslo-default-tcp-wan
+    description "Type: f5-sslo-user-coaching (2026-11-13 07:22:02)"
+    nagle disabled
+    slow-start disabled
+}
+ltm profile tcp /Common/sslo_L3_outbound.app/sslo_L3_outbound-tcp-lan {
+    app-service /Common/sslo_L3_outbound.app/sslo_L3_outbound
+    defaults-from /Common/sslo-default-tcp-lan
+    fast-open enabled
+    reset-on-timeout enabled
+    verified-accept disabled
+}
+ltm profile udp /Common/sslo-default-udp {
+    app-service /Common/ssloGS_global.app/ssloGS_global
+    defaults-from /Common/udp
+}
+net dns-resolver /Common/f5-aws-dns {
+    forward-zones {
+        amazonaws.com {
+            nameservers {
+                8.8.8.8:53 { }
+            }
+        }
+        idservice.net {
+            nameservers {
+                8.8.8.8:53 { }
+            }
+        }
+        shpapi.com {
+            nameservers {
+                8.8.8.8:53 { }
+            }
+        }
+    }
+    route-domain /Common/0
+}
+net dns-resolver /Common/sslo-default-http-explicit-profile-dns-resolver {
+    route-domain /Common/0
+}
+net dns-resolver /Common/ssloGS_global.app/ssloGS-net-resolver {
+    app-service /Common/ssloGS_global.app/ssloGS_global
+    route-domain /Common/0
+}
+net dns-validating-resolver /Common/ssloGS_global.app/ssloGS-net-validating-resolver {
+    app-service /Common/ssloGS_global.app/ssloGS_global
+    route-domain /Common/0
+    trust-anchors { ". IN DS 19036 8 2 49AAC11D7B6F6446702E54A1607371607A1A41855200FD2CE1CDDE32F24E8FB5" ". IN DS 20326 8 2 E06D44B80B8F1D39A95C0B0D7C65D08458E880409BBC683457104237C7F8EC8D" }
+}
+net interface 1.1 {
+    media-fixed 10000T-FD
+}
+net interface 1.2 {
+    media-fixed 10000T-FD
+}
+net interface 1.3 {
+    media-fixed 10000T-FD
+}
+net interface 1.4 {
+    media-fixed 10000T-FD
+}
+net interface 1.5 {
+    media-fixed 10000T-FD
+}
+net interface 1.6 {
+    media-fixed 10000T-FD
+}
+net interface 1.7 {
+    media-fixed 10000T-FD
+}
+net port-list /Common/_sys_self_allow_tcp_defaults {
+    ports {
+        22 { }
+        53 { }
+        161 { }
+        443 { }
+        1029-1043 { }
+        4353 { }
+    }
+}
+net port-list /Common/_sys_self_allow_udp_defaults {
+    ports {
+        53 { }
+        161 { }
+        520 { }
+        1026 { }
+        4353 { }
+    }
+}
+net route /Common/external_default_gateway {
+    gw 10.10.0.254
+    network default
+}
+net route-domain /Common/0 {
+    id 0
+    vlans {
+        /Common/external
+        /Common/icap_VLAN
+        /Common/HA
+        /Common/internal
+        /Common/socks-tunnel
+        /Common/http-tunnel
+    }
+}
+net self /Common/172.16.1.31 {
+    address 172.16.1.31/16
+    allow-service {
+        default
+    }
+    traffic-group /Common/traffic-group-local-only
+    vlan /Common/internal
+}
+net self /Common/172.16.1.33 {
+    address 172.16.1.33/16
+    allow-service {
+        default
+    }
+    traffic-group /Common/traffic-group-1
+    vlan /Common/internal
+}
+net self /Common/10.10.1.31 {
+    address 10.10.1.31/16
+    traffic-group /Common/traffic-group-local-only
+    vlan /Common/external
+}
+net self /Common/10.10.1.33 {
+    address 10.10.1.33/16
+    traffic-group /Common/traffic-group-1
+    vlan /Common/external
+}
+net self /Common/172.17.1.31 {
+    address 172.17.1.31/16
+    traffic-group /Common/traffic-group-local-only
+    vlan /Common/HA
+}
+net self /Common/172.17.1.33 {
+    address 172.17.1.33/16
+    traffic-group /Common/traffic-group-1
+    vlan /Common/HA
+}
+net self /Common/198.19.97.7 {
+    address 198.19.97.7/25
+    traffic-group /Common/traffic-group-local-only
+    vlan /Common/icap_VLAN
+}
+net self /Common/198.19.97.33 {
+    address 198.19.97.33/25
+    traffic-group /Common/traffic-group-1
+    vlan /Common/icap_VLAN
+}
+net self-allow {
+    defaults {
+        igmp:0
+        ospf:0
+        pim:0
+        tcp:161
+        tcp:22
+        tcp:4353
+        tcp:443
+        tcp:53
+        udp:1026
+        udp:161
+        udp:4353
+        udp:520
+        udp:53
+    }
+}
+net stp /Common/cist {
+    interfaces {
+        1.1 {
+            external-path-cost 200000
+            internal-path-cost 200000
+        }
+        1.2 {
+            external-path-cost 200000
+            internal-path-cost 200000
+        }
+        1.3 {
+            external-path-cost 200000
+            internal-path-cost 200000
+        }
+        1.7 {
+            external-path-cost 200000
+            internal-path-cost 200000
+        }
+    }
+    vlans {
+        /Common/HA
+        /Common/external
+        /Common/icap_VLAN
+        /Common/internal
+    }
+}
+net vlan /Common/HA {
+    dag-adjustment none
+    interfaces {
+        1.7 { }
+    }
+    tag 4064
+}
+net vlan /Common/external {
+    dag-adjustment none
+    interfaces {
+        1.1 { }
+    }
+    tag 4063
+}
+net vlan /Common/icap_VLAN {
+    dag-adjustment none
+    interfaces {
+        1.3 {
+            tagged
+        }
+    }
+    tag 50
+}
+net vlan /Common/internal {
+    dag-adjustment none
+    interfaces {
+        1.2 { }
+    }
+    tag 4062
+}
+net fdb tunnel /Common/http-tunnel { }
+net fdb tunnel /Common/socks-tunnel { }
+net fdb vlan /Common/HA { }
+net fdb vlan /Common/external { }
+net fdb vlan /Common/icap_VLAN { }
+net fdb vlan /Common/internal { }
+net ipsec ike-daemon /Common/ikedaemon {
+    log-publisher /Common/default-ipsec-log-publisher
+}
+net tunnels tunnel /Common/http-tunnel {
+    description "Tunnel for http-explicit profile"
+    profile /Common/tcp-forward
+}
+net tunnels tunnel /Common/socks-tunnel {
+    description "Tunnel for socks profile"
+    profile /Common/tcp-forward
+}
+pem global-settings analytics { }
+pem global-settings gx { }
+pem global-settings policy { }
+security device-id attribute /Common/att01 {
+    id 1
+}
+security device-id attribute /Common/att02 {
+    id 2
+}
+security device-id attribute /Common/att03 {
+    id 3
+}
+security device-id attribute /Common/att04 {
+    id 4
+}
+security device-id attribute /Common/att05 {
+    id 5
+}
+security device-id attribute /Common/att06 {
+    id 6
+}
+security device-id attribute /Common/att07 {
+    id 7
+}
+security device-id attribute /Common/att08 {
+    id 8
+}
+security device-id attribute /Common/att09 {
+    id 9
+}
+security device-id attribute /Common/att10 {
+    id 10
+}
+security device-id attribute /Common/att11 {
+    id 11
+}
+security device-id attribute /Common/att12 {
+    id 12
+}
+security device-id attribute /Common/att13 {
+    id 13
+}
+security device-id attribute /Common/att14 {
+    id 14
+}
+security device-id attribute /Common/att15 {
+    id 15
+}
+security device-id attribute /Common/att16 {
+    id 16
+}
+security device-id attribute /Common/att17 {
+    id 17
+}
+security device-id attribute /Common/att18 {
+    id 18
+}
+security device-id attribute /Common/att19 {
+    id 19
+}
+security device-id attribute /Common/att20 {
+    id 20
+}
+security device-id attribute /Common/att21 {
+    id 21
+}
+security device-id attribute /Common/att22 {
+    id 22
+}
+security device-id attribute /Common/att23 {
+    id 23
+}
+security device-id attribute /Common/att24 {
+    id 24
+}
+security device-id attribute /Common/att25 {
+    id 25
+}
+security device-id attribute /Common/att26 {
+    id 26
+}
+security device-id attribute /Common/att27 {
+    id 27
+}
+security device-id attribute /Common/att28 {
+    id 28
+}
+security device-id attribute /Common/att29 {
+    id 29
+}
+security device-id attribute /Common/att30 {
+    id 30
+}
+security device-id attribute /Common/att31 {
+    id 31
+}
+security device-id attribute /Common/att32 {
+    id 32
+}
+security device-id attribute /Common/att33 {
+    id 33
+}
+security device-id attribute /Common/att34 {
+    id 34
+}
+security device-id attribute /Common/att35 {
+    id 35
+}
+security device-id attribute /Common/att36 {
+    id 36
+}
+security device-id attribute /Common/att37 {
+    id 37
+}
+security device-id attribute /Common/att38 {
+    id 38
+}
+security device-id attribute /Common/att39 {
+    id 39
+}
+security dos ipv6-ext-hdr /Common/dos-ipv6-ext-hdr {
+    frame-types { auth dstopt esp frag hbh mobility route }
+}
+security dos udp-portlist /Common/dos-udp-portlist {
+    list-type exclude-listed-ports
+}
+security firewall config-change-log {
+    log-publisher /Common/local-db-publisher
+}
+security firewall config-entity-id /Common/uuid_entity_id {
+    entity-id 1283177408949613722
+}
+security firewall rule-list /Common/_sys_self_allow_all {
+    rules {
+        _sys_allow_all {
+            action accept
+            ip-protocol any
+        }
+    }
+}
+security firewall rule-list /Common/_sys_self_allow_defaults {
+    rules {
+        _sys_allow_tcp_defaults {
+            action accept
+            ip-protocol tcp
+            destination {
+                port-lists {
+                    /Common/_sys_self_allow_tcp_defaults
+                }
+            }
+        }
+        _sys_allow_udp_defaults {
+            action accept
+            ip-protocol udp
+            destination {
+                port-lists {
+                    /Common/_sys_self_allow_udp_defaults
+                }
+            }
+        }
+        _sys_allow_ospf_defaults {
+            action accept
+            ip-protocol ospf
+        }
+        _sys_allow_pim_defaults {
+            action accept
+            ip-protocol pim
+        }
+        _sys_allow_igmp_defaults {
+            action accept
+            ip-protocol igmp
+        }
+    }
+}
+security firewall rule-list /Common/_sys_self_allow_management {
+    rules {
+        _sys_allow_ssh {
+            action accept
+            ip-protocol tcp
+            destination {
+                ports {
+                    22 { }
+                }
+            }
+        }
+        _sys_allow_web {
+            action accept
+            ip-protocol tcp
+            destination {
+                ports {
+                    443 { }
+                }
+            }
+        }
+    }
+}
+security ip-intelligence policy /Common/ip-intelligence { }
+security protocol-inspection compliance-map /Common/map_10426 {
+    insp-id 10426
+    key-type int
+    value-type vector-string
+}
+security protocol-inspection compliance-objects /Common/allowed_ip_addresses {
+    insp-id 11800
+    type vector-string
+}
+security protocol-inspection compliance-objects /Common/allowed_ip_addresses {
+    insp-id 11801
+    type vector-string
+}
+security protocol-inspection compliance-objects /Common/allowed_list {
+    insp-id 10229
+    type vector-string
+}
+security protocol-inspection compliance-objects /Common/allowed_list {
+    insp-id 10430
+    type vector-string
+}
+security protocol-inspection compliance-objects /Common/allowed_list {
+    insp-id 10431
+    type vector-string
+}
+security protocol-inspection compliance-objects /Common/allowed_list {
+    insp-id 10232
+    type vector-string
+}
+security protocol-inspection compliance-objects /Common/allowed_list {
+    insp-id 11804
+    type vector-string
+}
+security protocol-inspection compliance-objects /Common/argument_len_max {
+    insp-id 10905
+    type int
+}
+security protocol-inspection compliance-objects /Common/command_argument_len_max {
+    insp-id 10609
+    type int
+}
+security protocol-inspection compliance-objects /Common/command_len_max {
+    insp-id 10707
+    type int
+}
+security protocol-inspection compliance-objects /Common/command_len_max {
+    insp-id 10609
+    type int
+}
+security protocol-inspection compliance-objects /Common/command_len_max {
+    insp-id 10905
+    type int
+}
+security protocol-inspection compliance-objects /Common/command_parameter_len_max {
+    insp-id 10707
+    type int
+}
+security protocol-inspection compliance-objects /Common/disallowed_ip_addresses {
+    insp-id 11800
+    type vector-string
+}
+security protocol-inspection compliance-objects /Common/disallowed_ip_addresses {
+    insp-id 11801
+    type vector-string
+}
+security protocol-inspection compliance-objects /Common/disallowed_list {
+    insp-id 10229
+    type vector-string
+}
+security protocol-inspection compliance-objects /Common/disallowed_list {
+    insp-id 10430
+    type vector-string
+}
+security protocol-inspection compliance-objects /Common/disallowed_list {
+    insp-id 10431
+    type vector-string
+}
+security protocol-inspection compliance-objects /Common/disallowed_list {
+    insp-id 10232
+    type vector-string
+}
+security protocol-inspection compliance-objects /Common/disallowed_list {
+    insp-id 11804
+    type vector-string
+}
+security protocol-inspection compliance-objects /Common/error_message_max {
+    insp-id 10102
+    type int
+}
+security protocol-inspection compliance-objects /Common/file_name_max {
+    insp-id 10102
+    type int
+}
+security protocol-inspection compliance-objects /Common/file_type_max {
+    insp-id 10102
+    type int
+}
+security protocol-inspection compliance-objects /Common/header_name_len_max {
+    insp-id 11016
+    type int
+}
+security protocol-inspection compliance-objects /Common/header_name_len_max {
+    insp-id 11223
+    type int
+}
+security protocol-inspection compliance-objects /Common/header_value_len_max {
+    insp-id 11016
+    type int
+}
+security protocol-inspection compliance-objects /Common/header_value_len_max {
+    insp-id 11223
+    type int
+}
+security protocol-inspection compliance-objects /Common/inter_mobile_network_list {
+    insp-id 10234
+    type vector-int
+}
+security protocol-inspection compliance-objects /Common/intra_mobile_network_list {
+    insp-id 10234
+    type vector-int
+}
+security protocol-inspection compliance-objects /Common/known_resource_records {
+    insp-id 10002
+    type vector-int
+}
+security protocol-inspection compliance-objects /Common/max_allocated_memory {
+    insp-id 11040
+    type int
+}
+security protocol-inspection compliance-objects /Common/method_len_max {
+    insp-id 11016
+    type int
+}
+security protocol-inspection compliance-objects /Common/method_len_max {
+    insp-id 11223
+    type int
+}
+security protocol-inspection compliance-objects /Common/option_name_max {
+    insp-id 10102
+    type int
+}
+security protocol-inspection compliance-objects /Common/option_value_max {
+    insp-id 10102
+    type int
+}
+security protocol-inspection compliance-objects /Common/response_argument_len_max {
+    insp-id 10609
+    type int
+}
+security protocol-inspection compliance-objects /Common/response_code_len_max {
+    insp-id 10609
+    type int
+}
+security protocol-inspection compliance-objects /Common/response_parameter_len_max {
+    insp-id 10707
+    type int
+}
+security protocol-inspection compliance-objects /Common/status_code_len_max {
+    insp-id 11016
+    type int
+}
+security protocol-inspection compliance-objects /Common/status_code_len_max {
+    insp-id 11223
+    type int
+}
+security protocol-inspection compliance-objects /Common/status_len_max {
+    insp-id 10707
+    type int
+}
+security protocol-inspection compliance-objects /Common/status_reason_len_max {
+    insp-id 11016
+    type int
+}
+security protocol-inspection compliance-objects /Common/status_reason_len_max {
+    insp-id 11223
+    type int
+}
+security protocol-inspection compliance-objects /Common/tag_len_max {
+    insp-id 10905
+    type int
+}
+security protocol-inspection compliance-objects /Common/uri_len_max {
+    insp-id 11016
+    type int
+}
+security protocol-inspection compliance-objects /Common/uri_len_max {
+    insp-id 11223
+    type int
+}
+security protocol-inspection compliance-objects /Common/version_len_max {
+    insp-id 11016
+    type int
+}
+security protocol-inspection compliance-objects /Common/version_len_max {
+    insp-id 11223
+    type int
+}
+security scrubber profile /Common/scrubber-profile-default {
+    advertisement-ttl 300
+}
+sys compatibility-level {
+    level 0
+}
+sys db adm.block.enable {
+    value "1"
+}
+sys db antifraud.encryptionfieldprefix {
+    value "__"
+}
+sys db apm.apd.connhwm {
+    value "512"
+}
+sys db apm.apd.connlwm {
+    value "472"
+}
+sys db apm.paap.version {
+    value "1.0"
+}
+sys db avr.stats.internal.maxentitiespertable {
+    value "2148"
+}
+sys db log.ftp.level {
+    value "Error"
+}
+sys db provision.extramb {
+    value "500"
+}
+sys db ssl.certrequest.commonname {
+    value "sslo1.f5trn.com"
+}
+sys db ssl.certrequest.divisionname {
+    value "Technical Training"
+}
+sys db ssl.certrequest.localityname {
+    value "Seattle"
+}
+sys db ssl.certrequest.organizationname {
+    value "F5, Inc."
+}
+sys db ssl.certrequest.stateorprovincename {
+    value "WA"
+}
+sys db tmm.dhcp.client.connection.packets.inprogress.max {
+    value "2000"
+}
+sys db tmm.dhcp.server.connection.packets.inprogress.max {
+    value "2000"
+}
+sys db version.fipsmodule {
+    value "Cryptographic Module for BIG-IP"
+}
+sys dns {
+    name-servers { 8.8.8.8 }
+}
+sys folder / {
+    device-group none
+    hidden false
+    inherited-devicegroup false
+    inherited-traffic-group false
+    traffic-group /Common/traffic-group-1
+}
+sys folder /Common {
+    device-group none
+    hidden false
+    inherited-devicegroup true
+    inherited-traffic-group true
+    traffic-group /Common/traffic-group-1
+}
+sys folder /Common/Drafts {
+    device-group none
+    hidden false
+    inherited-devicegroup true
+    inherited-traffic-group true
+    traffic-group /Common/traffic-group-1
+}
+sys folder /Common/EPSEC {
+    hidden false
+    inherited-devicegroup true
+    inherited-traffic-group true
+}
+sys folder /Common/EPSEC/Status {
+    hidden false
+    inherited-devicegroup true
+    inherited-traffic-group true
+}
+sys folder /Common/ssloF_global.app {
+    app-service /Common/ssloF_global.app/ssloF_global
+    device-group none
+    hidden false
+    inherited-devicegroup true
+    inherited-traffic-group true
+    traffic-group /Common/traffic-group-1
+}
+sys folder /Common/ssloGS_global.app {
+    app-service /Common/ssloGS_global.app/ssloGS_global
+    device-group none
+    hidden false
+    inherited-devicegroup true
+    inherited-traffic-group true
+    traffic-group /Common/traffic-group-1
+}
+sys folder /Common/ssloP_L3_outbound.app {
+    app-service /Common/ssloP_L3_outbound.app/ssloP_L3_outbound
+    device-group none
+    hidden false
+    inherited-devicegroup true
+    inherited-traffic-group true
+    traffic-group /Common/traffic-group-1
+}
+sys folder /Common/ssloS_F5_UC.app {
+    app-service /Common/ssloS_F5_UC.app/ssloS_F5_UC
+    device-group none
+    hidden false
+    inherited-devicegroup true
+    inherited-traffic-group true
+    traffic-group /Common/traffic-group-1
+}
+sys folder /Common/ssloT_L3_outbound.app {
+    app-service /Common/ssloT_L3_outbound.app/ssloT_L3_outbound
+    device-group none
+    hidden false
+    inherited-devicegroup true
+    inherited-traffic-group true
+    traffic-group /Common/traffic-group-1
+}
+sys folder /Common/sslo_L3_outbound.app {
+    app-service /Common/sslo_L3_outbound.app/sslo_L3_outbound
+    device-group none
+    hidden false
+    inherited-devicegroup true
+    inherited-traffic-group true
+    traffic-group /Common/traffic-group-1
+}
+sys global-settings {
+    gui-setup disabled
+    hostname sslo1.f5trn.com
+    mgmt-dhcp disabled
+}
+sys iapp-restricted-key /Common/iappKey {
+    restricted-key $M$rs$tDW8gggjaTXaZmGOAYQ4P1XxbFDbyK02KtRPeDLUE86NtT3qk27Em0BLv25U39lj
+}
+sys management-dhcp /Common/sys-mgmt-dhcp-config {
+    request-options { subnet-mask broadcast-address routers domain-name domain-name-servers host-name ntp-servers interface-mtu }
+}
+sys management-ip 192.168.1.31/16 {
+    description configured-statically
+}
+sys management-ovsdb {
+    bfd-disabled
+    bfd-route-domain none
+    ca-cert-file none
+    cert-file none
+    cert-key-file none
+    disabled
+    flooding-type replicator
+    log-level info
+    logical-routing-type none
+    tunnel-maintenance-mode active
+}
+sys management-route /Common/default {
+    description configured-statically
+    gateway 192.168.0.254
+    mtu 1500
+    network default
+}
+sys ntp {
+    servers { pool.ntp.org }
+}
+sys provision apm {
+    level minimum
+}
+sys provision ltm {
+    level nominal
+}
+sys provision sslo {
+    level nominal
+}
+sys snmp {
+    agent-addresses { tcp6:161 udp6:161 }
+    communities {
+        /Common/comm-public {
+            community-name public
+            source default
+        }
+    }
+    disk-monitors {
+        /Common/root {
+            minspace 2000
+            path /
+        }
+        /Common/var {
+            minspace 10000
+            path /var
+        }
+    }
+    process-monitors {
+        /Common/bigd {
+            max-processes infinity
+            process bigd
+        }
+        /Common/chmand {
+            process chmand
+        }
+        /Common/httpd {
+            max-processes infinity
+            process httpd
+        }
+        /Common/mcpd {
+            process mcpd
+        }
+        /Common/sod {
+            process sod
+        }
+        /Common/tmm {
+            max-processes infinity
+            process tmm
+        }
+    }
+}
+sys state-mirroring {
+    addr 172.17.1.31
+}
+sys application service /Common/ssloF_global.app/ssloF_global {
+    description hide
+    device-group none
+    inherited-devicegroup true
+    inherited-traffic-group true
+    traffic-group /Common/traffic-group-1
+}
+sys application service /Common/ssloGS_global.app/ssloGS_global {
+    device-group none
+    inherited-devicegroup true
+    inherited-traffic-group true
+    strict-updates disabled
+    traffic-group /Common/traffic-group-1
+}
+sys application service /Common/ssloP_L3_outbound.app/ssloP_L3_outbound {
+    description hide
+    device-group none
+    inherited-devicegroup true
+    inherited-traffic-group true
+    traffic-group /Common/traffic-group-1
+}
+sys application service /Common/ssloS_F5_UC.app/ssloS_F5_UC {
+    description hide
+    device-group none
+    inherited-devicegroup true
+    inherited-traffic-group true
+    strict-updates disabled
+    traffic-group /Common/traffic-group-1
+}
+sys application service /Common/ssloT_L3_outbound.app/ssloT_L3_outbound {
+    description hide
+    device-group none
+    inherited-devicegroup true
+    inherited-traffic-group true
+    strict-updates disabled
+    traffic-group /Common/traffic-group-1
+}
+sys application service /Common/sslo_L3_outbound.app/sslo_L3_outbound {
+    description hide
+    device-group none
+    inherited-devicegroup true
+    inherited-traffic-group true
+    strict-updates disabled
+    traffic-group /Common/traffic-group-1
+}
+sys diags ihealth {
+    expiration 30
+    no-ihealth false
+    options none
+    password none
+    user none
+}
+sys dynad settings {
+    development-mode false
+}
+sys ecm cloud-provider /Common/aws-ec2 {
+    description "The aws-ec2 parameters"
+    property-template {
+        account { }
+        availability-zone {
+            valid-values { a b c d }
+        }
+        instance-type {
+            valid-values { t2.micro t2.small t2.medium m3.medium m3.large m3.xlarge m3.2xlarge c3.large c3.xlarge c3.2xlarge c3.4xlarge c3.8xlarge r3.large r3.xlarge r3.2xlarge r3.4xlarge r3.8xlarge }
+        }
+        region {
+            valid-values { us-east-1 us-west-1 us-west-2 sa-east-1 eu-west-1 eu-central-1 ap-southeast-2 ap-southeast-1 ap-northeast-1 }
+        }
+    }
+}
+sys ecm cloud-provider /Common/dnet {
+    description "The dnet parameters"
+}
+sys ecm cloud-provider /Common/vsphere {
+    description "The vsphere parameters"
+    property-template {
+        cloud-host-ip { }
+        dhcp-network-name { }
+        end-point-url { }
+        node-name { }
+    }
+}
+sys file ifile /Common/ssloF_global.app/SSLOiFile {
+    app-service /Common/ssloF_global.app/ssloF_global
+    cache-path /config/filestore/files_d/Common_d/ifile_d/:Common:ssloF_global.app:SSLOiFile_62898_6
+    revision 6
+    source-path file:///tmp/ssloConfigs.json
+}
+sys file ifile /Common/user-blocking-html {
+    cache-path /config/filestore/files_d/Common_d/ifile_d/:Common:user-blocking-html_63293_1
+    revision 1
+    source-path https://raw.githubusercontent.com/f5devcentral/sslo-service-extensions/refs/heads/main/user-coaching/user-blocking-html
+}
+sys file ifile /Common/user-coaching-html {
+    cache-path /config/filestore/files_d/Common_d/ifile_d/:Common:user-coaching-html_63287_1
+    revision 1
+    source-path https://raw.githubusercontent.com/f5devcentral/sslo-service-extensions/refs/heads/main/user-coaching/user-coaching-html
+}
+sys file ssl-cert /Common/ca-f5trn-com {
+    cache-path /config/filestore/files_d/Common_d/certificate_d/:Common:ca-f5trn-com_61857_1
+    revision 1
+    source-path /var/run/key_mgmt/8qU46Q/ssl.crt/ca-f5trn-com
+}
+sys file ssl-key /Common/ca-f5trn-com {
+    cache-path /config/filestore/files_d/Common_d/certificate_key_d/:Common:ca-f5trn-com_61855_1
+    revision 1
+    source-path /var/run/key_mgmt/8qU46Q/ssl.key/ca-f5trn-com
+}
+sys fpga firmware-config {
+    type standard-balanced-fpga
+}
+sys sflow global-settings http { }
+sys sflow global-settings vlan { }
+sys software update {
+    auto-check enabled
+    auto-phonehome enabled
+    frequency weekly
+}
+sys turboflex profile-config {
+    type turboflex-adc
+}
+sys url-db url-category /Common/Analytics {
+    cat-id 0
+    cat-number 1903
+    default-action allow
+    display-name Analytics
+    f5-id 17003
+    initial-disposition 4
+    is-custom true
+    urls {
+        https://\*.mem.ai/ {
+            type glob-match
+        }
+        https://get.mem.ai/ { }
+    }
+}
+sys url-db url-category /Common/Generative_AI_-_Conversation {
+    cat-id 0
+    cat-number 1902
+    default-action allow
+    display-name "Generative AI - Conversation"
+    f5-id 17002
+    initial-disposition 4
+    is-custom true
+    urls {
+        https://\*.mem.ai/ {
+            type glob-match
+        }
+        https://get.mem.ai/ { }
+    }
+}
+sys url-db url-category /Common/Generative_AI_-_Multimedia {
+    cat-id 0
+    cat-number 1906
+    default-action allow
+    display-name "Generative AI - Multimedia"
+    f5-id 17006
+    initial-disposition 4
+    is-custom true
+    urls {
+        https://\*.artlist.io {
+            type glob-match
+        }
+        https://\*.elevenlabs.io {
+            type glob-match
+        }
+        https://artlist.io { }
+        https://elevenlabs.io { }
+    }
+}
+sys url-db url-category /Common/Generative_AI_-_Text_and_Code {
+    cat-id 0
+    cat-number 1905
+    default-action allow
+    display-name "Generative AI - Text and Code"
+    f5-id 17005
+    initial-disposition 4
+    is-custom true
+    urls {
+        https://\*.chatgpt.com {
+            type glob-match
+        }
+        https://\*.claude.ai {
+            type glob-match
+        }
+        https://\*.copilot.com {
+            type glob-match
+        }
+        https://\*.openai.com {
+            type glob-match
+        }
+        https://chatgpt.com { }
+        https://copilot.com { }
+        https://gemini.google.com {
+            type glob-match
+        }
+        https://openai.com { }
+        https://www.copilot.com { }
+    }
+}
+sys url-db url-category /Common/Other_AI_ML_Applications {
+    cat-id 0
+    cat-number 1907
+    default-action allow
+    display-name "Other AI ML Applications"
+    f5-id 17007
+    initial-disposition 4
+    is-custom true
+    urls {
+        https://\*.deevid.ai {
+            type glob-match
+        }
+        https://\*.openart.ai {
+            type glob-match
+        }
+        https://deevid.ai { }
+        https://openart.ai { }
+    }
+}
+sys url-db url-category /Common/sslo-urlCatPinners {
+    app-service /Common/ssloGS_global.app/ssloGS_global
+    cat-id 0
+    cat-number 1901
+    default-action allow
+    description "Sites with pinned certificates"
+    display-name Pinners
+    f5-id 17001
+    initial-disposition 4
+    is-custom true
+    urls {
+        https://\*.aadrm.com/ {
+            type glob-match
+        }
+        https://\*.aim.com/ {
+            type glob-match
+        }
+        https://\*.azurerms.com/ {
+            type glob-match
+        }
+        https://\*.citrixonline.com/ {
+            type glob-match
+        }
+        https://\*.data.toolbar.yahoo.com/ {
+            type glob-match
+        }
+        https://\*.dropbox.com/ {
+            type glob-match
+        }
+        https://\*.fedoraproject.com/ {
+            type glob-match
+        }
+        https://\*.itunes.apple.com/ {
+            type glob-match
+        }
+        https://\*.logmein.com/ {
+            type glob-match
+        }
+        https://\*.logmeinrescume.com/ {
+            type glob-match
+        }
+        https://\*.mozilla.org/ {
+            type glob-match
+        }
+        https://\*.rhn.redhat.com/ {
+            type glob-match
+        }
+        https://\*.sls.microsoft.com/ {
+            type glob-match
+        }
+        https://\*.update.microsoft.com/ {
+            type glob-match
+        }
+        https://account.live.com/ { }
+        https://autoupdate.opera.com/ { }
+        https://courier.push.apple.com/ { }
+        https://ecn.dev.virtualearth.net/ { }
+        https://softwareupdate.vmware.com/ { }
+    }
+}
+wom endpoint-discovery { }

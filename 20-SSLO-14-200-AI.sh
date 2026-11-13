@@ -29,7 +29,7 @@ sleep 45
 for i in {1..30}; do [ "$(sudo ssh root@192.168.1.31 cat /var/prompt/ps1)" = "Active" ] && break; sleep 5; done
 
 # merge in swg_profile configs
-sudo ssh 192.168.1.31 tmsh load sys config merge file $scf
+sudo ssh 192.168.1.31 tmsh load sys config merge file $SCF
 sudo ssh 192.168.1.31 tmsh save sys config
 
 # confirm sslo1 is active

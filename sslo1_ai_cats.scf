@@ -1,0 +1,85 @@
+TMSH-VERSION: 21.1.0
+
+sys url-db url-category /Common/Generative_AI_-_Conversation {
+    cat-id 0
+    cat-number 1902
+    default-action allow
+    display-name "Generative AI - Conversation"
+    f5-id 17002
+    initial-disposition 4
+    is-custom true
+    urls {
+        https://\*.mem.ai/ {
+            type glob-match
+        }
+        https://get.mem.ai/ { }
+    }
+}
+sys url-db url-category /Common/Generative_AI_-_Multimedia {
+    cat-id 0
+    cat-number 1906
+    default-action allow
+    display-name "Generative AI - Multimedia"
+    f5-id 17006
+    initial-disposition 4
+    is-custom true
+    urls {
+        https://\*.artlist.io {
+            type glob-match
+        }
+        https://\*.elevenlabs.io {
+            type glob-match
+        }
+        https://artlist.io { }
+        https://elevenlabs.io { }
+    }
+}
+sys url-db url-category /Common/Generative_AI_-_Text_and_Code {
+    cat-id 0
+    cat-number 1905
+    default-action allow
+    display-name "Generative AI - Text and Code"
+    f5-id 17005
+    initial-disposition 4
+    is-custom true
+    urls {
+        https://\*.chatgpt.com {
+            type glob-match
+        }
+        https://\*.claude.ai {
+            type glob-match
+        }
+        https://\*.copilot.com {
+            type glob-match
+        }
+        https://\*.openai.com {
+            type glob-match
+        }
+        https://chatgpt.com { }
+        https://copilot.com { }
+        https://gemini.google.com {
+            type glob-match
+        }
+        https://openai.com { }
+        https://www.copilot.com { }
+    }
+}
+sys url-db url-category /Common/Other_AI_ML_Applications {
+    cat-id 0
+    cat-number 1907
+    default-action allow
+    display-name "Other AI ML Applications"
+    f5-id 17007
+    initial-disposition 4
+    is-custom true
+    urls {
+        https://\*.deevid.ai {
+            type glob-match
+        }
+        https://\*.openart.ai {
+            type glob-match
+        }
+        https://deevid.ai { }
+        https://openart.ai { }
+    }
+}
